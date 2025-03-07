@@ -31,15 +31,13 @@ def worker(stop_event,ui,MainWindow,q1,q2,model):
         results=[]
 
         results = model.predict(source=cFrame.frameList,batch=len(cFrame.frameList), conf=0.3, iou=0.8,imgsz=[cFrame.height,cFrame.width],verbose=False,device=0,half=True)
-        # results = local_model.predict("image1.jpg")
 
-        # new_cFrame = frame_class()
-        # new_cFrame.results=results
-        # new_cFrame.timeStampList=cFrame.timeStampList
-        # new_cFrame.side=cFrame.side
+        new_cFrame = frame_class.Frame()
+        new_cFrame.results=results
+        new_cFrame.timeStampList=cFrame.timeStampList
+        new_cFrame.side=cFrame.side
 
-        # q2.put(cFrame)
-
+        q2.put(cFrame)
 
         if MainWindow.params["visualise"]==1:
             # if q1.qsize()< 5:

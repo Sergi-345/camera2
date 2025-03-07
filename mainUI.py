@@ -3,6 +3,8 @@ from methods import showCoordinates
 from methods import template_
 from methods import checkboxes_
 from methods import worker2_detections
+from methods import worker3_stadistics
+from methods import team_class
 import methods.worker_from_file as worker_from_file
 import methods.worker_from_camera as worker_from_camera
 import save_image
@@ -36,7 +38,6 @@ def open_folder():
     
 
 def start():
-    print("MainWindow.params[] : ", MainWindow.params["from_file"])
     
     if MainWindow.params["from_file"]== 0:
         MainWindow.params["start"]=1
@@ -48,6 +49,8 @@ def start():
     else:
         
         MainWindow.params["start_file"]=1
+        perm_team = team_class.TEAM()
+
         q1=q.Queue() # Detections1
         q2=q.Queue() # Detections1
         q3=q.Queue() # Stadistics
@@ -64,6 +67,8 @@ def start():
         threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"L",q1), daemon=True).start()
         time.sleep(3)
         threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
+        time.sleep(3)
+        threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3,perm_team), daemon=True).start()
 
 def stop():
     MainWindow.params["start"]=0
@@ -196,6 +201,13 @@ if __name__ == "__main__":
     
 
     ui.folder_name_textEdit.setText(MainWindow.params["folder_name"])
+
+    ui.img_size_comboBox.addItems(MainWindow.params["image_size"])
+
+        # Set default selection
+    ui.img_size_comboBox.setCurrentIndex(MainWindow.params["current_size_index"])
+    ui.img_size_comboBox.currentIndexChanged.connect(lambda index: checkboxes_.item_changed(MainWindow, ui, index))
+
 
     MainWindow.show()
     

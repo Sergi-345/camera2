@@ -44,23 +44,27 @@ def update_frame2(frame, gui):
 
 def worker(stop_event,ui,MainWindow,side):
     HOME = os.getcwd()
-    local_model = YOLO(f'{HOME}/from_yolo8n/best.engine') 
+    local_model = YOLO(f'{HOME}/models/best.engine') 
 
 
     # Usa MJPEG si es compatible #### WORKING!!
     framerate=60
+    width = int(MainWindow.params["width"])
+    height= int(MainWindow.params["height"])
     if side=="L":
-        pipeline = "v4l2src device=/dev/video2 ! image/jpeg, width=1024, height=768, framerate={}/1 ! jpegdec ! videoconvert ! appsink".format(framerate) 
+        # pipeline = "v4l2src device=/dev/video2 ! image/jpeg, width={width}, height={height}}, framerate={framerate}/1 ! jpegdec ! videoconvert ! appsink"
+        pipeline = f"v4l2src device=/dev/video2 ! image/jpeg, framerate={framerate}/1 ! jpegdec ! videoconvert ! videoscale ! video/x-raw, width={width}, height={height} ! appsink"
         cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
 
         if not cap.isOpened():
-            print("AAAAAAAAAAAAAAAAAA No se pudo abrir la cámara ")
-            pipeline = "v4l2src device=/dev/video3 ! image/jpeg, width=1024, height=768, framerate={}/1 ! jpegdec ! videoconvert ! appsink".format(framerate) 
+            pipeline = f"v4l2src device=/dev/video3 ! image/jpeg, framerate={framerate}/1 ! jpegdec ! videoconvert ! videoscale ! video/x-raw, width={width}, height={height} ! appsink"
+            # pipeline = "v4l2src device=/dev/video3 ! image/jpeg, width={width}, height={height}}, framerate={framerate}/1 ! jpegdec ! videoconvert ! appsink"
             cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
             if not cap.isOpened():
                 exit()
     else:
-        pipeline = "v4l2src device=/dev/video0 ! image/jpeg, width=1024, height=768, framerate={}/1 ! jpegdec ! videoconvert ! appsink".format(framerate) 
+        pipeline = f"v4l2src device=/dev/video0 ! image/jpeg, framerate={framerate}/1 ! jpegdec ! videoconvert ! videoscale ! video/x-raw, width={width}, height={height} ! appsink"
+        # pipeline = "v4l2src device=/dev/video0 ! image/jpeg, width={width}, height={height}}, framerate={framerate}/1 ! jpegdec ! videoconvert ! appsink"
         cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
 
     # Verificar si se aplicó correctamente
@@ -82,8 +86,8 @@ def worker(stop_event,ui,MainWindow,side):
     # [448,384]
     frame_size = (int(actual_width), int(actual_height))
 
-    width = 1024
-    height = 768
+    # width = 1024
+    # height = 768
 
     # out = cv2.VideoWriter(output_file, fourcc, framerate, frame_size)
     out2 = cv2.VideoWriter(output_file2, fourcc, framerate, frame_size)
@@ -153,11 +157,11 @@ def worker(stop_event,ui,MainWindow,side):
             prev_frame = gray_frame
 
 
-        if MainWindow.params["plot"]==1:
-            # results = local_model.predict(task="detect",source=frame, conf=0.3, iou=0.4,imgsz=width,verbose=False,device=0,half=False, int8=False)
-            # results = local_model.predict(task="detect",source=frame, conf=0.3, iou=0.4,imgsz=[height,width],verbose=False,device=0,half=False)
-            results = local_model.predict(task="detect", conf=0.3, iou=0.4,imgsz=[actual_height,actual_width],verbose=False,device=0,half=True)
-            plot_results(results,frame)
+        # if MainWindow.params["plot"]==1:
+        #     # results = local_model.predict(task="detect",source=frame, conf=0.3, iou=0.4,imgsz=width,verbose=False,device=0,half=False, int8=False)
+        #     # results = local_model.predict(task="detect",source=frame, conf=0.3, iou=0.4,imgsz=[height,width],verbose=False,device=0,half=False)
+        #     results = local_model.predict(task="detect", conf=0.3, iou=0.4,imgsz=[actual_height,actual_width],verbose=False,device=0,half=True)
+        #     plot_results(results,frame)
 
         if MainWindow.params["record"]==1:
             out2.write(frame)

@@ -153,3 +153,13 @@ def set_white_balance(MainWindow,ui):
     if white_balance_temperature==5000:
         subprocess.run(["v4l2-ctl", "-d", "/dev/video0", "--set-ctrl=white_balance_temperature_auto=1"])
         subprocess.run(["v4l2-ctl", "-d", "/dev/video2", "--set-ctrl=white_balance_temperature_auto=1"])
+
+
+def item_changed(MainWindow, ui,index):
+    MainWindow.params["current_size_index"]=index
+    curr_width=MainWindow.params["widthList"][index]
+    curr_height=MainWindow.params["heightList"][index]
+    MainWindow.params["width"]=curr_width
+    MainWindow.params["height"]=curr_height
+
+
