@@ -25,8 +25,10 @@ def update_frame(frame,gui,side):
     pixmap = QPixmap.fromImage(QImg)
     if side=="L":
         gui.initFrame2_label.setPixmap(pixmap)
+        # cv2.imshow("left",frame)
     else:
         gui.initFrame_label.setPixmap(pixmap)
+        # cv2.imshow("right",frame)
 
 def update_frame2(frame, gui):
     # Ensure frame is resized properly
@@ -42,7 +44,7 @@ def update_frame2(frame, gui):
     pixmap = QPixmap.fromImage(QImg)
     gui.initFrame2_label.setPixmap(pixmap)
 
-def worker(stop_event,ui,MainWindow,side):
+def worker(stop_event,ui,MainWindow,side,q):
     HOME = os.getcwd()
     local_model = YOLO(f'{HOME}/models/best.engine') 
 
@@ -52,16 +54,18 @@ def worker(stop_event,ui,MainWindow,side):
     width = int(MainWindow.params["width"])
     height= int(MainWindow.params["height"])
     if side=="L":
-        # pipeline = "v4l2src device=/dev/video2 ! image/jpeg, width={width}, height={height}}, framerate={framerate}/1 ! jpegdec ! videoconvert ! appsink"
         pipeline = f"v4l2src device=/dev/video2 ! image/jpeg, framerate={framerate}/1 ! jpegdec ! videoconvert ! videoscale ! video/x-raw, width={width}, height={height} ! appsink"
+        # Crop Image
+        # c
+
         cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
 
-        if not cap.isOpened():
-            pipeline = f"v4l2src device=/dev/video3 ! image/jpeg, framerate={framerate}/1 ! jpegdec ! videoconvert ! videoscale ! video/x-raw, width={width}, height={height} ! appsink"
-            # pipeline = "v4l2src device=/dev/video3 ! image/jpeg, width={width}, height={height}}, framerate={framerate}/1 ! jpegdec ! videoconvert ! appsink"
-            cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
-            if not cap.isOpened():
-                exit()
+        # if not cap.isOpened():
+        #     pipeline = f"v4l2src device=/dev/video3 ! image/jpeg, framerate={framerate}/1 ! jpegdec ! videoconvert ! videoscale ! video/x-raw, width={width}, height={height} ! appsink"
+        #     # pipeline = "v4l2src device=/dev/video3 ! image/jpeg, width={width}, height={height}}, framerate={framerate}/1 ! jpegdec ! videoconvert ! appsink"
+        #     cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
+        #     if not cap.isOpened():
+        #         exit()
     else:
         pipeline = f"v4l2src device=/dev/video0 ! image/jpeg, framerate={framerate}/1 ! jpegdec ! videoconvert ! videoscale ! video/x-raw, width={width}, height={height} ! appsink"
         # pipeline = "v4l2src device=/dev/video0 ! image/jpeg, width={width}, height={height}}, framerate={framerate}/1 ! jpegdec ! videoconvert ! appsink"
@@ -78,26 +82,16 @@ def worker(stop_event,ui,MainWindow,side):
     print(f"Formato: {actual_format}")
 
     # 🎥 Configurar el guardado del video
-    output_file = "/home/aitech/GIT/videos/match/output_"+side+"_processed.avi"
-    output_file2 = "/home/aitech/GIT/videos/match/output_"+side+".avi"
-    
-    fourcc = cv2.VideoWriter_fourcc(*"XVID")  # Codec eficiente (prueba también "MJPG")
-    # out = cv2.VideoWriter(output_file, fourcc, 120, (1024, 768))
-    # [448,384]
-    frame_size = (int(actual_width), int(actual_height))
-
-    # width = 1024
-    # height = 768
-
-    # out = cv2.VideoWriter(output_file, fourcc, framerate, frame_size)
-    out2 = cv2.VideoWriter(output_file2, fourcc, framerate, frame_size)
+    # output_file2 = "/home/aitech/GIT/videos/match/output_"+side+".avi"
+    # fourcc = cv2.VideoWriter_fourcc(*"XVID")  # Codec eficiente (prueba también "MJPG")
+    # frame_size = (int(actual_width), int(actual_height))
+    # out2 = cv2.VideoWriter(output_file2, fourcc, framerate, frame_size)
 
     ## XVID 9.4s cada 5s
     ## MJPG 17.61s cada 5s
     # H264 9.8 cada 5s
     ## H265 5.9 cada 5s
 
-    cnt=0
     init=time.time()
 
     # local_model = YOLO(f'{HOME}/from_yolo8n/best.pt') 
@@ -105,9 +99,6 @@ def worker(stop_event,ui,MainWindow,side):
 
     ### VARIABLES
     cnt=0
-    points=[]
-    cnt_not_detected=0
-    text=""
 
     background_subs=0
 
@@ -118,6 +109,9 @@ def worker(stop_event,ui,MainWindow,side):
         prev_frame = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
         # prev_frame=prev_frame[height1:height2,width1:width2]
 
+    batch_size=8
+    frameList=[]
+    cntf=-1
 
     while not stop_event.is_set(): 
 
@@ -135,10 +129,6 @@ def worker(stop_event,ui,MainWindow,side):
             print("time after 5 sec: ",time.time()-init, ", cnt : ", cnt)
             init=time.time()
 
-        red=(0, 0, 255)
-        blue=(255, 0, 0)
-        green=(0, 255, 0)
-        color= blue
 
         if background_subs==1:
             gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -164,10 +154,24 @@ def worker(stop_event,ui,MainWindow,side):
         #     plot_results(results,frame)
 
         if MainWindow.params["record"]==1:
-            out2.write(frame)
+            #### ADD FRAME TO BATCH
+            cntf+=1
+            if cntf==0:
+                frameList=[]
+
+            frameList.append(frame)
+
+            ### SEND BATCH AND RESET CNT
+            if len(frameList)==batch_size:
+                q.put(frameList)
+                
+                cntf=-1
+
+            # q.put(frame)# out2.write(frame)
 
         if MainWindow.params["visualise"]==1:
-            update_frame(frame,ui,side)
+            if cnt%20==0:
+                update_frame(frame,ui,side)
 
         if 0xFF == ord('q'):
             break
@@ -197,3 +201,38 @@ def plot_results(results,frame):
             cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
             cv2.putText(frame, f"{class_name} {conf:.2f}", (x1, y1 - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+            
+
+def save_video(stop_event,ui,MainWindow,side,q):
+
+    # 🎥 Configurar el guardado del video
+    output_file = "/home/aitech/GIT/videos/match/output_"+side+".avi"
+    fourcc = cv2.VideoWriter_fourcc(*"XVID")  # Codec eficiente (prueba también "MJPG")
+    
+    actual_height = int(MainWindow.params["height"])
+    actual_width = int(MainWindow.params["width"])
+    frame_size = (int(actual_width), int(actual_height))
+    framerate=60
+    out = cv2.VideoWriter(output_file, fourcc, framerate, frame_size)
+
+    cnt=0
+    while not stop_event.is_set(): 
+        
+        frameList = q.get()
+        top_frames= len(frameList)-3
+        cnt_frames=0
+        for frame in frameList:
+            cnt+=1
+            out.write(frame)
+            cnt_frames+=1
+            if cnt_frames==top_frames:
+                break
+
+        if cnt%100==0:
+            # print("cnt : ", cnt)
+            print("qsave.qsize(): ",q.qsize())
+
+        ## XVID 9.4s cada 5s
+        ## MJPG 17.61s cada 5s
+        # H264 9.8 cada 5s
+        ## H265 5.9 cada 5s

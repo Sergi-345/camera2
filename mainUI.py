@@ -42,9 +42,17 @@ def start():
     if MainWindow.params["from_file"]== 0:
         MainWindow.params["start"]=1
             # Iniciar el hilo con la función worker
-        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"L"), daemon=True).start()
+        q1=q.Queue() # Save
+        q2=q.Queue() # Save
+        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"L",q1), daemon=True).start()
         time.sleep(2)
-        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"R"), daemon=True).start()
+        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
+
+        threading.Thread(target=worker_from_camera.save_video,  args=(stop_event,ui,MainWindow,"L",q1), daemon=True).start()
+
+        threading.Thread(target=worker_from_camera.save_video,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
+
+
         time.sleep(2)
     else:
         
