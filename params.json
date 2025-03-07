@@ -1,0 +1,18 @@
+{
+    "plot": 1,
+    "record": 0,
+    "fps": 120,
+    "contrast": 0,
+    "repeat": 0,
+    "brightness": -50,
+    "visualise": 1,
+    "from_file": 1,
+    "folder_name": "/home/aitech/GIT/videos/match/7",
+    "start": 0,
+    "start_file": 0,
+    "saturation": 150,
+    "gamma": 10,
+    "white_balance_temperature": 1000,
+    "templateL": "/home/aitech/GIT/videos/match/7/output_L_frame_100.jpg",
+    "templateR": "/home/aitech/GIT/videos/match/7/output_R_frame_100.jpg"
+}
