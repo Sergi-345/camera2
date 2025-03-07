@@ -15,6 +15,8 @@ import json
 import time
 import cv2
 import os
+import torch
+from ultralytics import YOLO
 # from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import (QCoreApplication, QObject, QRunnable, QThread,
@@ -48,9 +50,16 @@ def start():
         MainWindow.params["start_file"]=1
         q1=q.Queue() # Detections1
         q2=q.Queue() # Detections1
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1), daemon=True).start()
+        q3=q.Queue() # Stadistics
+        #### STREAMS
+        model1 = HOME = os.getcwd()
+    # local_model = YOLO(f'{HOME}/models/best.pt').to("cuda")
+        model1 = YOLO(f'{HOME}/models/best.engine')
+        model2 = YOLO(f'{HOME}/models/best.engine')
+
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1,q3,model1), daemon=True).start()
         time.sleep(3)
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q2), daemon=True).start()
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q2,q3,model2), daemon=True).start()
         time.sleep(10)
         threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"L",q1), daemon=True).start()
         time.sleep(3)

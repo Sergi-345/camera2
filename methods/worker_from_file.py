@@ -65,12 +65,19 @@ def worker(stop_event,ui,MainWindow,side,q):
     cFrame.height=actual_height
     cFrame.width=actual_width
     cFrame.side=side
+    cnt_jump=0
     while not stop_event.is_set(): 
 
         ret, frame = cap.read()
         if not ret:
             print("No se pudo capturar el cuadro")
             break
+
+        cnt_jump+=1
+        time.sleep(0.012)
+
+        if cnt_jump%4==0:
+            continue
 
         if MainWindow.params["start_file"]==0:
             break
@@ -79,8 +86,7 @@ def worker(stop_event,ui,MainWindow,side,q):
         if cnt%(framerate*5)==0:
             diff=time.time()-init
             print("time after 5 sec: ",time.time()-init, ", cnt : ", cnt)
-            # if diff<5:
-            #     time.sleep(diff)
+
             init=time.time()
 
         if background_subs==1:
@@ -89,7 +95,7 @@ def worker(stop_event,ui,MainWindow,side,q):
         if MainWindow.params["plot"]==1:
             # results = local_model.predict(source=frame, conf=0.3, iou=0.4,imgsz=[actual_height,actual_width],verbose=False,device=0,half=True)
             # plot_results(results,frame)
-            time.sleep(0.012)
+            
             #### ADD FRAME TO BATCH
             cntf+=1
             if cntf==0:
