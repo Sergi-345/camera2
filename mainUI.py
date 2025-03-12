@@ -1,10 +1,11 @@
-from varUI import VarUI
+from UI import VarUI
 from methods import showCoordinates
 from methods import template_
 from methods import checkboxes_
 from methods import worker2_detections
 from methods import worker3_stadistics
 from methods import team_class
+from methods import worker_save_video
 import methods.worker_from_file as worker_from_file
 import methods.worker_from_camera as worker_from_camera
 import save_image
@@ -13,6 +14,7 @@ import subprocess
 # import main_RT
 import threading
 import queue as q
+from collections import deque
 import json
 import time
 import cv2
@@ -48,9 +50,9 @@ def start():
         time.sleep(2)
         threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
 
-        threading.Thread(target=worker_from_camera.save_video,  args=(stop_event,ui,MainWindow,"L",q1), daemon=True).start()
+        threading.Thread(target=worker_save_video.save_video,  args=(stop_event,ui,MainWindow,"L",q1), daemon=True).start()
 
-        threading.Thread(target=worker_from_camera.save_video,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
+        threading.Thread(target=worker_save_video.save_video,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
 
 
         time.sleep(2)
@@ -62,9 +64,19 @@ def start():
         q1=q.Queue() # Detections1
         q2=q.Queue() # Detections1
         q3=q.Queue() # Stadistics
+        
+        # q_saveL = deque(maxlen=10)
+        # q_saveR = deque(maxlen=10)
+        q_saveL = q.Queue()
+        q_saveR = q.Queue()
+
+        ## Threading to save video
+        threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,"L",q_saveL), daemon=True).start()
+        threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,"R",q_saveR), daemon=True).start()
+
         #### STREAMS
         model1 = HOME = os.getcwd()
-    # local_model = YOLO(f'{HOME}/models/best.pt').to("cuda")
+        # local_model = YOLO(f'{HOME}/models/best.pt').to("cuda")
         model1 = YOLO(f'{HOME}/models/best.engine')
         model2 = YOLO(f'{HOME}/models/best.engine')
 
@@ -76,7 +88,7 @@ def start():
         time.sleep(3)
         threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
         time.sleep(3)
-        threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3,perm_team), daemon=True).start()
+        threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR), daemon=True).start()
 
 def stop():
     MainWindow.params["start"]=0
@@ -211,11 +223,21 @@ if __name__ == "__main__":
     ui.folder_name_textEdit.setText(MainWindow.params["folder_name"])
 
     ui.img_size_comboBox.addItems(MainWindow.params["image_size"])
+    ui.cut_comboBox.addItems(MainWindow.params["image_size_cut"])
 
-        # Set default selection
+    # Set default selection
     ui.img_size_comboBox.setCurrentIndex(MainWindow.params["current_size_index"])
     ui.img_size_comboBox.currentIndexChanged.connect(lambda index: checkboxes_.item_changed(MainWindow, ui, index))
 
+    ui.cut_comboBox.setCurrentIndex(MainWindow.params["cut_index"])
+    ui.cut_comboBox.currentIndexChanged.connect(lambda index: checkboxes_.item_changed_cut(MainWindow, ui, index))
+
+    ui.jumps_textEdit.setText(str(MainWindow.params["jumps"]))
+    ui.jumps_textEdit.textChanged.connect(lambda: checkboxes_.jumps_changed(MainWindow, ui))
+
+    ui.time_sleep_textEdit.setText(str(MainWindow.params["time_sleep_processed"]))
+    ui.time_sleep_textEdit.textChanged.connect(lambda: checkboxes_.time_sleep_changed(MainWindow, ui))
+    
 
     MainWindow.show()
     

@@ -30,21 +30,23 @@ def update_frame(results,gui,side):
 
 
         height, width, bytesPerComponent = orig_img.shape
-        new_w, new_h = int(width), int(height)
-        newFrame=orig_img
-        newFrame=cv2.resize(newFrame, (new_w, new_h)) 
-        bytesPerLine = 3 * new_w
-        cv2.cvtColor(newFrame, cv2.COLOR_BGR2RGB, newFrame)   
-        QImg = QImage(newFrame.data, new_w, new_h, bytesPerLine,QtGui.QImage.Format.Format_RGB888
+
+        qimage_width = 600
+        aspect_ratio = width / height
+        qimage_height = int(qimage_width * aspect_ratio)
+
+        resized_frame = cv2.resize(orig_img, (qimage_width, qimage_height))
+
+        cv2.cvtColor(resized_frame, cv2.COLOR_BGR2RGB, resized_frame)   
+        bytesPerLine = 3 * qimage_width
+        QImg = QImage(resized_frame.data, qimage_width, qimage_height, bytesPerLine,QtGui.QImage.Format.Format_RGB888
     )
         pixmap = QPixmap.fromImage(QImg)
         if side=="L":
             gui.initFrame_label.setPixmap(pixmap)
-        else:
+        elif side=="R":
             gui.initFrame2_label.setPixmap(pixmap)
 
-        # if cnt==3:
-        #     break
 
 def update_frame2(frame, gui):
     # Ensure frame is resized properly

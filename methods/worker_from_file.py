@@ -1,5 +1,6 @@
 from methods import frame_class
 from methods import visualization
+from methods import tools
 import queue
 import cv2
 import time
@@ -34,17 +35,6 @@ def worker(stop_event,ui,MainWindow,side,q):
     print(f"FPS: {actual_fps}")
     print(f"Formato: {actual_format}")
 
-    # 🎥 Configurar el guardado del video
-    output_file = MainWindow.params["folder_name"]+"/output_"+side+"_processed.avi"
-    
-    fourcc = cv2.VideoWriter_fourcc(*"XVID")  # Codec eficiente (prueba también "MJPG")
-    # out = cv2.VideoWriter(output_file, fourcc, 120, (1024, 768))
-    # [448,384]
-    frame_size = (int(actual_width), int(actual_height))
-
-    # out = cv2.VideoWriter(output_file, fourcc, framerate, frame_size)
-    out2 = cv2.VideoWriter(output_file, fourcc, framerate, frame_size)
-
 
     ### VARIABLES
     init=time.time()
@@ -74,13 +64,17 @@ def worker(stop_event,ui,MainWindow,side,q):
             break
 
         cnt_jump+=1
-        time.sleep(0.012)
+        time.sleep(MainWindow.params["time_sleep_processed"])
 
-        if cnt_jump%4==0:
+        if cnt_jump%MainWindow.params["jumps"]==0:
             continue
 
         if MainWindow.params["start_file"]==0:
             break
+
+        ### Modify frame size
+        frame = tools.cut_frame(frame,MainWindow,actual_height,actual_width)
+
 
         cnt+=1
         if cnt%(framerate*5)==0:
@@ -109,9 +103,6 @@ def worker(stop_event,ui,MainWindow,side,q):
             if len(cFrame.frameList)==batch_size:
                 q.put(cFrame)
                 cntf=-1
-
-        if MainWindow.params["record"]==1:
-            out2.write(frame)
 
         if 0xFF == ord('q'):
             break

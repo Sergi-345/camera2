@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1627</width>
-    <height>875</height>
+    <width>1694</width>
+    <height>930</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -123,10 +123,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="initFrame_label">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>190</y>
+      <x>40</x>
+      <y>180</y>
       <width>721</width>
-      <height>611</height>
+      <height>701</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -235,10 +235,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="initFrame2_label">
     <property name="geometry">
      <rect>
-      <x>760</x>
+      <x>800</x>
       <y>190</y>
-      <width>851</width>
-      <height>621</height>
+      <width>721</width>
+      <height>691</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -339,8 +339,8 @@ p, li { white-space: pre-wrap; }
    <widget class="QPushButton" name="create_images_pushButton">
     <property name="geometry">
      <rect>
-      <x>1160</x>
-      <y>50</y>
+      <x>1050</x>
+      <y>30</y>
       <width>121</width>
       <height>23</height>
      </rect>
@@ -619,14 +619,14 @@ p, li { white-space: pre-wrap; }
    <widget class="QComboBox" name="img_size_comboBox">
     <property name="geometry">
      <rect>
-      <x>620</x>
+      <x>720</x>
       <y>140</y>
       <width>151</width>
       <height>25</height>
      </rect>
     </property>
    </widget>
-   <widget class="QComboBox" name="after_cut_comboBox">
+   <widget class="QComboBox" name="cut_comboBox">
     <property name="geometry">
      <rect>
       <x>1170</x>
@@ -641,6 +641,64 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>1170</x>
       <y>110</y>
+      <width>181</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>cut size</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_15">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>140</y>
+      <width>141</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Output camera</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="jumps_textEdit">
+    <property name="geometry">
+     <rect>
+      <x>1320</x>
+      <y>20</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="html">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2';&quot;&gt;4&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_16">
+    <property name="geometry">
+     <rect>
+      <x>1250</x>
+      <y>20</y>
       <width>61</width>
       <height>20</height>
      </rect>
@@ -651,7 +709,47 @@ p, li { white-space: pre-wrap; }
      </font>
     </property>
     <property name="text">
-     <string>After CUT</string>
+     <string>jump 1/</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="time_sleep_textEdit">
+    <property name="geometry">
+     <rect>
+      <x>1320</x>
+      <y>60</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="html">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2';&quot;&gt;0.015&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_17">
+    <property name="geometry">
+     <rect>
+      <x>1160</x>
+      <y>70</y>
+      <width>161</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>sleep(s)-processed video</string>
     </property>
    </widget>
   </widget>
@@ -660,7 +758,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1627</width>
+     <width>1694</width>
      <height>22</height>
     </rect>
    </property>

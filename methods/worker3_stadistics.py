@@ -10,7 +10,7 @@ from collections import deque
 
 
 
-def worker(stop_event,ui,MainWindow,q3,perm_team):
+def worker(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR):
 
 
     cnt=0
@@ -19,7 +19,7 @@ def worker(stop_event,ui,MainWindow,q3,perm_team):
             break
         cFrame=[]
         cFrame=q3.get()
-        if len(cFrame.frameList)==0:
+        if len(cFrame.results)==0:
             return
         
         cnt+=1
@@ -27,14 +27,17 @@ def worker(stop_event,ui,MainWindow,q3,perm_team):
             # print("cnt : ", cnt)
             print("q3.qsize(): ",q3.qsize())
 
+
         if cFrame.side== "L":
-            perm_team.buffer_results_L.append(cFrame.results)
+            # q_saveL.append(cFrame)
+            q_saveL.put(cFrame)
+            # perm_team.buffer_results_L.append(cFrame.results)
 
         if cFrame.side== "R":
-            perm_team.buffer_results_R.append(cFrame.results)
+            # q_saveR.append(cFrame)
+            q_saveR.put(cFrame)
+            # perm_team.buffer_results_R.append(cFrame.results)
 
-
-        
 
         # if MainWindow.params["visualise"]==1:
         #     # if q1.qsize()< 5:

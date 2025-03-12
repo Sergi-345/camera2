@@ -1,17 +1,17 @@
 {
-    "plot": 0,
+    "plot": 1,
     "record": 1,
     "fps": 120,
     "contrast": 0,
     "repeat": 0,
     "brightness": -50,
-    "visualise": 1,
-    "from_file": 0,
-    "folder_name": "/home/aitech/GIT/videos/match/7",
+    "visualise": 0,
+    "from_file": 1,
+    "folder_name": "/home/aitech/GIT/videos/match/8",
     "start": 0,
-    "start_file": 0,
-    "saturation": 150,
-    "gamma": 100,
+    "start_file": 1,
+    "saturation": 70,
+    "gamma": 20,
     "white_balance_temperature": 1000,
     "templateL": "/home/aitech/GIT/videos/match/7/output_L_frame_100.jpg",
     "templateR": "/home/aitech/GIT/videos/match/7/output_R_frame_100.jpg",
@@ -22,7 +22,7 @@
         "1280x960",
         "1920x1080"
     ],
-    "current_size_index": 2,
+    "current_size_index": 4,
     "widthList": [
         800,
         960,
@@ -37,6 +37,26 @@
         960,
         1080
     ],
-    "width": 1024,
-    "height": 768
+    "width": 1920,
+    "height": 1080,
+    "image_size_cut": [
+        "832x576",
+        "1088x672",
+        "1088x768"
+    ],
+    "widthList_cut": [
+        832,
+        1088,
+        1088
+    ],
+    "heightList_cut": [
+        576,
+        672,
+        768
+    ],
+    "cut_index": 1,
+    "cut_width": 1088,
+    "cut_height": 672,
+    "jumps": 20,
+    "time_sleep_processed": 0.02
 }

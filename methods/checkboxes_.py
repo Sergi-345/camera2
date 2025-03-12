@@ -162,4 +162,20 @@ def item_changed(MainWindow, ui,index):
     MainWindow.params["width"]=curr_width
     MainWindow.params["height"]=curr_height
 
+def item_changed_cut(MainWindow, ui,index):
+    MainWindow.params["cut_index"]=index
+    cut_width=MainWindow.params["widthList_cut"][index]
+    cut_height=MainWindow.params["heightList_cut"][index]
+    MainWindow.params["cut_width"]=cut_width
+    MainWindow.params["cut_height"]=cut_height
+
+def jumps_changed(MainWindow, ui):
+    MainWindow.params["jumps"]= int(ui.jumps_textEdit.toPlainText())
+
+def time_sleep_changed(MainWindow, ui):
+    MainWindow.params["time_sleep_processed"]= float(ui.time_sleep_textEdit.toPlainText())
+
+
+    
+
 
