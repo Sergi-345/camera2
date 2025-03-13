@@ -6,12 +6,13 @@ from methods import visualization
 from ultralytics import YOLO
 
 from collections import deque
-
-
+import queue as q
 
 
 def worker(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR):
 
+    qL = deque(maxlen=100)
+    qR = deque(maxlen=100)
 
     cnt=0
     while True:
@@ -24,8 +25,30 @@ def worker(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR):
         
         cnt+=1
         if cnt%100==0:
-            # print("cnt : ", cnt)
             print("q3.qsize(): ",q3.qsize())
+
+        if cFrame.side== "L":
+            perm_team.buffer_results_L.append(cFrame.results)
+            perm_team.time
+        if cFrame.side== "R":
+            perm_team.buffer_results_R.append(cFrame.results)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         if cFrame.side== "L":
@@ -37,9 +60,3 @@ def worker(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR):
             # q_saveR.append(cFrame)
             q_saveR.put(cFrame)
             # perm_team.buffer_results_R.append(cFrame.results)
-
-
-        # if MainWindow.params["visualise"]==1:
-        #     # if q1.qsize()< 5:
-        #     # visualization.plot_results(results,orig_img)
-        #     visualization.update_frame(results,ui,cFrame.side)

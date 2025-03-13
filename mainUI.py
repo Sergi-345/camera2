@@ -1,4 +1,5 @@
 from UI import VarUI
+from methods import myApp_class
 from methods import showCoordinates
 from methods import template_
 from methods import checkboxes_
@@ -15,7 +16,7 @@ import subprocess
 import threading
 import queue as q
 from collections import deque
-import json
+
 import time
 import cv2
 import os
@@ -40,6 +41,8 @@ def open_folder():
     
 
 def start():
+
+    perm_team = team_class.TEAM()
     
     if MainWindow.params["from_file"]== 0:
         MainWindow.params["start"]=1
@@ -59,8 +62,7 @@ def start():
     else:
         
         MainWindow.params["start_file"]=1
-        perm_team = team_class.TEAM()
-
+        
         q1=q.Queue() # Detections1
         q2=q.Queue() # Detections1
         q3=q.Queue() # Stadistics
@@ -101,61 +103,6 @@ def create_images():
     save_image.save_frame(MainWindow,ui,"L")
     save_image.save_frame(MainWindow,ui,"R")
 
-class EmptyClass:
-    pass
-
-# empty_instance = EmptyClass()
-
-class MyApp(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        # self.setWindowTitle("PyQt con Hilo Funcional")
-        # self.setGeometry(100, 100, 400, 300)
-
-        # # Iniciar el hilo con la función worker
-        
-        self.params = vars(EmptyClass())
-        self.load_params()  # Update with JSON values if available
-        self.cnt_video_frames=0
-        self.start=0
-        
-        # threading.Thread(target=workerVAR1_camera.worker1,  args=(params,stop_event,self), daemon=True).start()
-
-    def closeEvent(self, event):
-        """Save parameters to JSON when closing the UI."""
-        self.save_params()
-        event.accept()  # Allow the window to close
-
-    def save_params(self):
-        """Save parameters to a JSON file."""
-        try:
-            with open("params.json", "w") as file:
-                self.params["repeat"] = 0
-                self.params["start"] = 0
-                print("self.params : ", self.params)
-                json.dump(self.params, file, indent=4)
-            print("✅ Parameters saved successfully!")
-        except Exception as e:
-            print(f"❌ Error saving parameters: {e}")
-    
-    def load_params(self):
-        """Load parameters from JSON file and update self.params."""
-        try:
-            with open("params.json", "r") as file:
-                loaded_params = json.load(file)
-
-            # Update only existing keys to avoid overwriting defaults
-            for key, value in loaded_params.items():
-
-                # if key in self.params:  # Ensure we don't add unknown keys
-                self.params[key] = value
-            
-            print("✅ Parameters loaded successfully!")
-        except FileNotFoundError:
-            print("⚠️ No existing parameters file found, using defaults.")
-        except Exception as e:
-            print(f"❌ Error loading parameters: {e}")
-
 
 
 if __name__ == "__main__":
@@ -169,7 +116,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     
-    MainWindow = MyApp()
+    MainWindow = myApp_class.MyApp()
     ui = VarUI.Ui_MainWindow()
     ui.setupUi(MainWindow)
 
