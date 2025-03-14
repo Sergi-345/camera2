@@ -3,6 +3,7 @@ import cv2
 import time
 import os
 from methods import tools
+from methods import frame_class
 from ultralytics import YOLO
 import numpy as np
 from collections import deque
@@ -49,10 +50,7 @@ def update_frame2(frame, gui):
     pixmap = QPixmap.fromImage(QImg)
     gui.initFrame2_label.setPixmap(pixmap)
 
-def worker(stop_event,ui,MainWindow,side,q):
-    HOME = os.getcwd()
-    local_model = YOLO(f'{HOME}/models/best.engine') 
-
+def worker(stop_event,ui,MainWindow,side,q_save,q_detect):
 
     # Usa MJPEG si es compatible #### WORKING!!
     framerate=60
@@ -85,40 +83,24 @@ def worker(stop_event,ui,MainWindow,side,q):
     print(f"FPS: {actual_fps}")
     print(f"Formato: {actual_format}")
 
-    # 🎥 Configurar el guardado del video
-    # output_file2 = "/home/aitech/GIT/videos/match/output_"+side+".avi"
-    # fourcc = cv2.VideoWriter_fourcc(*"XVID")  # Codec eficiente (prueba también "MJPG")
-    # frame_size = (int(actual_width), int(actual_height))
-    # out2 = cv2.VideoWriter(output_file2, fourcc, framerate, frame_size)
-
-    ## XVID 9.4s cada 5s
-    ## MJPG 17.61s cada 5s
-    # H264 9.8 cada 5s
-    ## H265 5.9 cada 5s
-
     init=time.time()
-
-    # local_model = YOLO(f'{HOME}/from_yolo8n/best.pt') 
-    points=[]
 
     ### VARIABLES
     cnt=0
 
-    background_subs=0
-
-    if background_subs==1:
-
-        # Read the first frame
-        ret, prev_frame = cap.read()
-        prev_frame = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
-        # prev_frame=prev_frame[height1:height2,width1:width2]
-
-
-
-    batch_size=8
+    batch_size=4
     frameList=[]
     cntf=-1
     cnt_jump=0
+
+    cut_width=MainWindow.params["cut_width"]
+    cut_height=MainWindow.params["cut_height"]
+
+    cFrame = frame_class.Frame()
+    cFrame.height=cut_height
+    cFrame.width=cut_width
+    cFrame.side=side
+
     while not stop_event.is_set(): 
 
         if MainWindow.params["start"]==0:
@@ -129,6 +111,15 @@ def worker(stop_event,ui,MainWindow,side,q):
         if not ret:
             print("No se pudo capturar el cuadro")
             break
+
+        if side=="L":
+            MainWindow.start_vect[0]=1
+        else:
+            MainWindow.start_vect[1]=1
+
+        if sum(MainWindow.start_vect[:])!=2:
+            time.sleep(0.05)
+            continue
 
         cnt_jump+=1
 
@@ -144,27 +135,22 @@ def worker(stop_event,ui,MainWindow,side,q):
         ### Modify frame size
         frame = tools.cut_frame(frame,MainWindow,actual_height,actual_width)
 
-        if background_subs==1:
-            gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-            # Compute absolute difference between current and previous frame
-            diff_frame = cv2.absdiff(gray_frame, prev_frame)
+        if MainWindow.params["plot"]==1:
+            
+            #### ADD FRAME TO BATCH
+            cntf+=1
+            if cntf==0:
+                cFrame.frameList=[]
+                cFrame.timeStampList=[]
 
-            # Apply thresholding to highlight the differences
-            _, thresh_frame = cv2.threshold(diff_frame, 25, 255, cv2.THRESH_BINARY)
+            cFrame.frameList.append(frame)
+            cFrame.timeStampList.append(time.time())
 
-            if side=="L":
-                cv2.imshow("thresh_frameL",thresh_frame )
-            else:
-                cv2.imshow("thresh_frameR",thresh_frame )
-            # Update previous frame
-            prev_frame = gray_frame
-
-        # if MainWindow.params["plot"]==1:
-        #     # results = local_model.predict(task="detect",source=frame, conf=0.3, iou=0.4,imgsz=width,verbose=False,device=0,half=False, int8=False)
-        #     # results = local_model.predict(task="detect",source=frame, conf=0.3, iou=0.4,imgsz=[height,width],verbose=False,device=0,half=False)
-        #     results = local_model.predict(task="detect", conf=0.3, iou=0.4,imgsz=[actual_height,actual_width],verbose=False,device=0,half=True)
-        #     plot_results(results,frame)
+            ### SEND BATCH AND RESET CNT
+            if len(cFrame.frameList)==batch_size:
+                q_detect.put(cFrame)
+                cntf=-1
 
         if MainWindow.params["record"]==1:
             #### ADD FRAME TO BATCH
@@ -176,11 +162,9 @@ def worker(stop_event,ui,MainWindow,side,q):
 
             ### SEND BATCH AND RESET CNT
             if len(frameList)==batch_size:
-                q.put(frameList)
+                q_save.put(frameList)
                 
                 cntf=-1
-
-            # q.put(frame)# out2.write(frame)
 
         if MainWindow.params["visualise"]==1:
             if cnt%20==0:

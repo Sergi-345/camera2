@@ -18,7 +18,7 @@ from PyQt6.QtCore import (QCoreApplication, QObject, QRunnable, QThread,
 def worker(stop_event,ui,MainWindow,side,q):
     HOME = os.getcwd()
     # local_model = YOLO(f'{HOME}/models/best.pt') 
-    local_model = YOLO(f'{HOME}/models/best.engine') 
+    # local_model = YOLO(f'{HOME}/models/best.engine') 
 
     videoSource = MainWindow.params["folder_name"]+"/output_"+side+".avi"
 
@@ -63,6 +63,15 @@ def worker(stop_event,ui,MainWindow,side,q):
             print("No se pudo capturar el cuadro")
             break
 
+        if side=="L":
+            MainWindow.start_vect[0]=1
+        else:
+            MainWindow.start_vect[1]=1
+
+        if sum(MainWindow.start_vect[:])!=2:
+            time.sleep(0.05)
+            continue
+
         cnt_jump+=1
         time.sleep(MainWindow.params["time_sleep_processed"])
 
@@ -75,7 +84,6 @@ def worker(stop_event,ui,MainWindow,side,q):
         ### Modify frame size
         frame = tools.cut_frame(frame,MainWindow,actual_height,actual_width)
 
-
         cnt+=1
         if cnt%(framerate*5)==0:
             diff=time.time()-init
@@ -87,8 +95,6 @@ def worker(stop_event,ui,MainWindow,side,q):
             visualization.substracion(frame,side)
 
         if MainWindow.params["plot"]==1:
-            # results = local_model.predict(source=frame, conf=0.3, iou=0.4,imgsz=[actual_height,actual_width],verbose=False,device=0,half=True)
-            # plot_results(results,frame)
             
             #### ADD FRAME TO BATCH
             cntf+=1

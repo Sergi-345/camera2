@@ -7,6 +7,7 @@ from methods import worker2_detections
 from methods import worker3_stadistics
 from methods import team_class
 from methods import worker_save_video
+from methods import parameters
 import methods.worker_from_file as worker_from_file
 import methods.worker_from_camera as worker_from_camera
 import save_image
@@ -43,54 +44,55 @@ def open_folder():
 def start():
 
     perm_team = team_class.TEAM()
+    params_pos = parameters.PARAMS()
+    folder = MainWindow.params["folder_name"]
+    params_pos.load_data(folder)
+
+    HOME = os.getcwd()
+    # local_model = YOLO(f'{HOME}/models/best.pt').to("cuda")
+    model1 = YOLO(f'{HOME}/models/best.engine')
+    model2 = YOLO(f'{HOME}/models/best.engine')
+
+    q1_detectL=q.Queue() # Detections1
+    q1_detectR=q.Queue() # Detections1
+    q3_stad=q.Queue() # Stadistics
+    q_saveL = q.Queue()
+    q_saveR = q.Queue()
     
     if MainWindow.params["from_file"]== 0:
         MainWindow.params["start"]=1
-            # Iniciar el hilo con la función worker
-        q1=q.Queue() # Save
-        q2=q.Queue() # Save
-        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"L",q1), daemon=True).start()
+
+        ## THREADS TO SAVE VIDEO
+        threading.Thread(target=worker_save_video.save_video,  args=(stop_event,ui,MainWindow,"L",q_saveL), daemon=True).start()
+        threading.Thread(target=worker_save_video.save_video,  args=(stop_event,ui,MainWindow,"R",q_saveR), daemon=True).start()
+        time.sleep(1)
+        ## THREADS TO DETECTIONS
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1), daemon=True).start()
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2), daemon=True).start()
+        time.sleep(5)
+        ## THREADS TO VIDEO SOURCE
+        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"L",q_saveL,q1_detectL), daemon=True).start()
+        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"R",q_saveR,q1_detectR), daemon=True).start()
         time.sleep(2)
-        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
 
-        threading.Thread(target=worker_save_video.save_video,  args=(stop_event,ui,MainWindow,"L",q1), daemon=True).start()
-
-        threading.Thread(target=worker_save_video.save_video,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
-
-
-        time.sleep(2)
     else:
         
         MainWindow.params["start_file"]=1
         
-        q1=q.Queue() # Detections1
-        q2=q.Queue() # Detections1
-        q3=q.Queue() # Stadistics
-        
-        # q_saveL = deque(maxlen=10)
-        # q_saveR = deque(maxlen=10)
-        q_saveL = q.Queue()
-        q_saveR = q.Queue()
-
-        ## Threading to save video
+        ## THREADS TO SAVE VIDEO
         threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,"L",q_saveL), daemon=True).start()
         threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,"R",q_saveR), daemon=True).start()
-
-        #### STREAMS
-        model1 = HOME = os.getcwd()
-        # local_model = YOLO(f'{HOME}/models/best.pt').to("cuda")
-        model1 = YOLO(f'{HOME}/models/best.engine')
-        model2 = YOLO(f'{HOME}/models/best.engine')
-
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1,q3,model1), daemon=True).start()
+        time.sleep(1)
+        ## THREADS TO DETECTIONS
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1), daemon=True).start()
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2), daemon=True).start()
+        time.sleep(5)
+        ## THREADS TO VIDEO SOURCE
+        threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"L",q1_detectL), daemon=True).start()
+        threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"R",q1_detectR), daemon=True).start()
         time.sleep(3)
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q2,q3,model2), daemon=True).start()
-        time.sleep(10)
-        threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"L",q1), daemon=True).start()
-        time.sleep(3)
-        threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"R",q2), daemon=True).start()
-        time.sleep(3)
-        threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR), daemon=True).start()
+        ## THREAD TO STATISTICS
+        threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3_stad,perm_team,q_saveL,q_saveR,params_pos, model1), daemon=True).start()
 
 def stop():
     MainWindow.params["start"]=0
@@ -109,9 +111,6 @@ if __name__ == "__main__":
 
     actions=showCoordinates.CLICK_DETECTOR()
 
-    ### TURN-ON WORKERS THREADS
-    # threading.Thread(target=workerVAR1_camera.worker1,  args=(params,), daemon=True).start()
-
     # -----------INITIALIZE UI--------------
     import sys
     app = QtWidgets.QApplication(sys.argv)
@@ -120,8 +119,7 @@ if __name__ == "__main__":
     ui = VarUI.Ui_MainWindow()
     ui.setupUi(MainWindow)
 
-
-    print(MainWindow.params)
+    # print(MainWindow.params)
     ui.start_pushButton.clicked.connect(start)
     ui.stop_pushButton.clicked.connect(stop)
     ui.brightness_pushButton.clicked.connect(lambda: checkboxes_.set_brightness(MainWindow, ui))
@@ -165,7 +163,6 @@ if __name__ == "__main__":
     ui.court_points_L_pushButton.clicked.connect(lambda: template_.draw_points(MainWindow, actions,"L"))
     ui.court_points_R_pushButton.clicked.connect(lambda: template_.draw_points(MainWindow, actions,"R"))
     ui.save_points_pushButton.clicked.connect(lambda: template_.save_points(MainWindow, actions))
-    
 
     ui.folder_name_textEdit.setText(MainWindow.params["folder_name"])
 
@@ -185,7 +182,6 @@ if __name__ == "__main__":
     ui.time_sleep_textEdit.setText(str(MainWindow.params["time_sleep_processed"]))
     ui.time_sleep_textEdit.textChanged.connect(lambda: checkboxes_.time_sleep_changed(MainWindow, ui))
     
-
     MainWindow.show()
     
     sys.exit(app.exec())  # Use exec() instead of exec_()

@@ -20,6 +20,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.load_params()  # Update with JSON values if available
         self.cnt_video_frames=0
         self.start=0
+        self.start_vect=[0,0]
         
         # threading.Thread(target=workerVAR1_camera.worker1,  args=(params,stop_event,self), daemon=True).start()
 
@@ -34,7 +35,7 @@ class MyApp(QtWidgets.QMainWindow):
             with open("params.json", "w") as file:
                 self.params["repeat"] = 0
                 self.params["start"] = 0
-                print("self.params : ", self.params)
+                # print("self.params : ", self.params)
                 json.dump(self.params, file, indent=4)
             print("✅ Parameters saved successfully!")
         except Exception as e:
