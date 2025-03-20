@@ -219,29 +219,17 @@ def check_ball_outside_quadrants(perm_team,params,newBall):
                     return ballOutsideQuadrants 
     return ballOutsideQuadrants
 
-def check_ball_in_forbid_triangle(perm_team,params,newBall):
-    px=newBall.pos.lowerMidX
-    py=newBall.pos.lowerMidY
-    point=Point([px,py])
-
-    ballInsideTriangle=False
-    for poly in params.for_triangle_matrix:
-        if point.within(poly)==True:
-            ballInsideTriangle = True
-            return ballInsideTriangle
-    return ballInsideTriangle
-
-
 
 def check_ball_quadrant(ball, params):
         ballImg=[ball.pos.lowerMidX,ball.pos.lowerMidY]
         point=Point(ballImg)
-        
-        points=[]
-        for i in range(len(params.poly_vect)):
-            a = point.within(params.poly_vect[i])
+
+        for i in range(len(params.poly_img_list[ball.side])):
+            a = point.within(params.poly_img_list[ball.side][i])
             if a:
                 ball.quadrant=i
+                break
+        
 
 def check_any_ball_in_field(perm_team):
 
@@ -249,35 +237,14 @@ def check_any_ball_in_field(perm_team):
         return True
     return False
 
-def check_ball_side(ball,params):
-    for side in range(len(params.full_quadr_matrix)):
-        for height in range(len(params.full_quadr_matrix[side])):
-            for quadrant in params.full_quadr_matrix[side][height]:
-                if quadrant == ball.quadrant:
-                    ball.side=side
-                    ball.height= height
+def check_ball_height(ball,params):
 
-def randomise_serve_ball(perm_team,newServeBall):
-    if perm_team.reception_quadrant_ball==7 or perm_team.reception_quadrant_ball==10:
-        if newServeBall.RealMidPointY<3.5:
-            start=0
-            end=2.5
-            if newServeBall.side==0:
-                newServeBall.RealMidPointX = newServeBall.RealMidPointX+random.uniform(start, end)
-            else:
-                newServeBall.RealMidPointX = newServeBall.RealMidPointX-random.uniform(start, end)
+    for height in range(len(params.quadr_matrix)):
+        for width in range(len(params.quadr_matrix[height])):
+            if ball.quadrant==width:
+                ball.height=height
+                ball.width=width
 
-def check_ball_in_the_upper_area(ball_list,perm_team):
-    
-    ball_in_top=False
-    for ball in ball_list:
-        if ball.type=="top":
-            perm_team.ball_in_top_list.append(ball)
-            ball_in_top=True
-    if ball_in_top:
-        perm_team.ball_top_counter+=1
-    else:
-        perm_team.ball_in_top_list=[]
 
 def check_ball_in_top_of_player(ball_list,perm_team):
     for player in perm_team.player_list:

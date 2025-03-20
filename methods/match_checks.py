@@ -60,13 +60,6 @@ def check_ball_lower_than_threshold(ball,params):
     return False
 
 
-def check_player_height_width(player,params):
-    for side in range(len(params.full_quadr_matrix)):
-        for height in range(len(params.full_quadr_matrix[side])):
-            for width in range(len(params.full_quadr_matrix[side][height])):
-                if player.quadrant==width:
-                    player.height=height
-                    player.width=width
 
 def check_change_side(perm_team):
     if sum(perm_team.player_missing_vector[:])>=3 and perm_team.change_side==0:

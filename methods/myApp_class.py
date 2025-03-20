@@ -3,7 +3,8 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtCore import (QCoreApplication, QObject, QRunnable, QThread,
                           QThreadPool, pyqtSignal, pyqtSlot, Qt)
 from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QFileDialog
-
+from PyQt6.QtCore import pyqtSlot
+from UI import VarUI
 
 class EmptyClass:
     pass
@@ -11,18 +12,20 @@ class EmptyClass:
 class MyApp(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        # self.setWindowTitle("PyQt con Hilo Funcional")
-        # self.setGeometry(100, 100, 400, 300)
+        self.ui = VarUI.Ui_MainWindow()  # Create the UI object inside MyApp
+        self.ui.setupUi(self)
 
-        # # Iniciar el hilo con la función worker
-        
         self.params = vars(EmptyClass())
         self.load_params()  # Update with JSON values if available
         self.cnt_video_frames=0
         self.start=0
         self.start_vect=[0,0]
+        self.qstad_size=0
+        self.qsaveL_size=0
+        self.qsaveR_size=0
+        self.velR=0
+        self.velL=0
         
-        # threading.Thread(target=workerVAR1_camera.worker1,  args=(params,stop_event,self), daemon=True).start()
 
     def closeEvent(self, event):
         """Save parameters to JSON when closing the UI."""
@@ -58,3 +61,20 @@ class MyApp(QtWidgets.QMainWindow):
             print("⚠️ No existing parameters file found, using defaults.")
         except Exception as e:
             print(f"❌ Error loading parameters: {e}")
+    
+    @pyqtSlot()
+    def update_ui(self):
+        print("AAAAA")
+        self.ui.qstad_size_textEdit.setText(str(self.qstad_size))
+        self.ui.qsaveL_size_textEdit.setText(str(self.qsaveL_size))
+        self.ui.qsaveR_size_textEdit.setText(str(self.qsaveR_size))
+        self.ui.velL_textEdit.setText(str(self.velL))
+        self.ui.velR_textEdit.setText(str(self.velR))
+
+    # @pyqtSlot()
+    # def update_ui(self):
+    #     self.ui.qstad_size_textEdit.setText(str(self.qstad_size))
+    #     self.ui.qsaveL_size_textEdit.setText(str(self.qsaveL_size))
+    #     self.ui.qsaveR_size_textEdit.setText(str(self.qsaveR_size))
+    #     self.ui.velL_textEdit.setText(str(self.velL))
+    #     self.ui.velR_textEdit.setText(str(self.velR))

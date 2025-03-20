@@ -15,12 +15,16 @@ class PARAMS():
             new_p[0]=-new_p[0]
             self.pL_real.append(new_p)
 
+        self.p_map=[]
+        self.p_map.append(self.pL_real)
+        self.p_map.append(self.pR_real)
+
     data=[]
     calibration=0
 
-    perm_teamL=[]
-    perm_teamR=[]
-    mid_point=[]
+    points_img = []
+
+    offset=[0,0]
     
     # First Line
     p0r=[10,10]
@@ -36,39 +40,17 @@ class PARAMS():
     p8r=[10,0]
     p9r=[7,0]
     p10r=[4,0]
-
-    Rpoints_vect = []
+    p11r=[0,2.5]
     
-    pR_real = [p0r,p1r, p2r, p3r, p4r, p5r, p6r, p7r, p8r, p9r, p10r]
+    pR_real = [p0r,p1r, p2r, p3r, p4r, p5r, p6r, p7r, p8r, p9r, p10r, p11r]
     
-    
-    poly_vect=[]
-    squares_list=[]
-
-    UpLeft_quadr_array = [0, 1, 2]
-    DownLeft_quadr_array = [6, 7, 8]
-    UpRight_quadr_array = [3, 4, 5]
-    DownRight_quadr_array = [9, 10, 11]
-
-    Left_quadr_matrix= []
-    Right_quadr_matrix= []
-
-    full_quadr_matrix=[]
-
-
-    q1Img=[]
-    q4Img=[]
-    q7Img=[]
-    q10Img=[]
-
         
-    def load_data(self,folder):
-        # Check if video has parameters:
+    def load_data(self,folder,MainWindow):
 
+        # Check if video has parameters:
         jsonFile1=folder+ "/points.json"
         jsonFile2= "points.json"
 
-        jsonFile=""
         if os.path.exists(jsonFile1):
             jsonFile2=jsonFile1
 
@@ -77,108 +59,80 @@ class PARAMS():
         # a dictionary
         data = json.load(f)
         
-        self.points_imageL=data['image pointsL']
-        self.points_imageR=data['image pointsR']
+        self.points_img.append(data['image pointsL'])
+        self.points_img.append(data['image pointsR'])
         
-        pL=self.points_imageL
-        pR=self.points_imageR
+        p=self.points_img
 
         ## APPLY OFFSET
-        # for point in p:
-        #     point[1]+=200
-
-        self.sq_list_L=[]
-        self.sq_list_R=[]
-
-        self.fill_squares_list(self.sq_list_L, pL)
-        self.fill_squares_list(self.sq_list_R, pR)
-
-        self.sq_real_list_L=[]
-        self.sq_real_list_R=[]
-
-        self.fill_squares_list(self.sq_real_list_L, self.pR_real)
-        self.fill_squares_list(self.sq_real_list_R, self.pL_real)
-
+        self.update_offset(MainWindow,p)
         
-        for n in range(len(self.sq_real_list_L)):
-            self.squares_list.append(self.sq_list_L[n])
-            self.Rpoints_vect.append(self.sq_real_list_L[n])
+        ## COORDINATES FROM IMAGE
+        self.sq_img_list=[]
+        self.sq_img_list.append(self.fill_squares_list( p[0]))
+        self.sq_img_list.append(self.fill_squares_list( p[1]))
 
-        for n in range(len(self.sq_real_list_R)):
-            self.squares_list.append(self.sq_list_R[n])
-            self.Rpoints_vect.append(self.sq_real_list_R[n])
+        ## COORDINATES FROM REAL MAP
+        self.sq_map_list=[]
+        self.sq_map_list.append(self.fill_squares_list( self.p_map[0]))
+        self.sq_map_list.append(self.fill_squares_list( self.p_map[1]))
 
 
-        self.UpLeft_quadr_array = [0, 1, 2]
-        self.DownLeft_quadr_array = [6, 7, 8]
-        self.UpRight_quadr_array = [3, 4, 5]
-        self.DownRight_quadr_array = [9, 10, 11]
+        self.Up_quadr_array = [0, 1, 2]
+        self.Down_quadr_array = [3, 4, 5]
 
-        self.Left_quadr_matrix= [self.UpLeft_quadr_array, self.DownLeft_quadr_array]
-        self.Right_quadr_matrix= [self.UpRight_quadr_array, self.DownRight_quadr_array]
+        self.quadr_matrix= [self.Up_quadr_array, self.Down_quadr_array]
 
-        self.full_quadr_matrix = [self.Left_quadr_matrix, self.Right_quadr_matrix]
-
-        # 0,3,6,9 - Defense
-        # 1,4,7,10 - Transition
-        # 2,5,8,11 - Attack
+        # 0,3 - Defense
+        # 1,4 - Transition
+        # 2,5 - Attack
 
         # Create poly vector
+        self.poly_img_list=[]
+        for side in range(2):
+            poly_list_side=[]
+            for i in range(len(self.sq_img_list[side])):
+                poly=[]
+                poly = Polygon(self.sq_img_list[side][i])
+                poly_list_side.append(poly)
+            self.poly_img_list.append(poly_list_side)
 
-        self.poly_vect=[]
-        
-        for i in range(len(self.squares_list)):
-            poly=[]
-            poly = Polygon(self.squares_list[i])
-            self.poly_vect.append(poly)
+    def update_offset(self,MainWindow,p):
+        current_width = MainWindow.curr_width
+        current_height = MainWindow.curr_height
 
-    def fill_squares_list(self,r, p):
-        # r -> squares Lis
-        # p -> points list 
+        cut_width = MainWindow.params["cut_width"]
+        cut_height = MainWindow.params["cut_height"]
+
+        self.offset[0]= current_width-cut_width
+        self.offset[1]= current_height-cut_height
+
+        if self.offset[0]<0:
+            self.offset[0]=0
+        if self.offset[1]<0:
+            self.offset[1]=0
+
+        for side in p:
+            for point in side:
+                point[0]-= self.offset[0]/2
+                point[1]-= self.offset[1]
+
+
+    def fill_squares_list(self, p):
+        # r -> squares list
+        # p -> points list
+        r=[]
         r.append([p[0], p[1], p[5], p[4]])# 0 - Defense
         r.append([p[1], p[2], p[6], p[5]]) # 1 - Transition
         r.append([p[2], p[3], p[7], p[6]]) # 2 - Attack
 
+        r.append([p[4], p[5], p[9], p[8]]) # 4 - Transition
         r.append([p[5], p[6], p[10], p[9]]) # 3 - Defense
-        r.append([p[4], p[5], p[8], p[9]]) # 4 - Transition
-        r.append([p[6], p[7], p[10]]) # 5 - Attack
+        r.append([p[6], p[7], p[11], p[10]]) # 5 - Attack
 
-    def draw_players_position(self, team,frame):
-        for player in team.player_list:
-            PlayerImg=[player.pos.x0+(player.pos.xEnd-player.pos.x0)/2,player.pos.yEnd]
-            point=Point(PlayerImg)
-            
-            points=[]
-            for i in range(len(self.poly_vect)):
-                a = point.within(self.poly_vect[i])
-                if a:
-                    points=self.squares_list[i]
-                    break
-                
-            if points:
-                pts = np.array([points[0], points[1], 
-                    points[2], points[3]],
-                np.int32)
+        return r
 
-                pts = np.array([points[:]],
-                np.int32)
-    
-                pts = pts.reshape((-1, 1, 2))
-                
-                isClosed = True
-                
-                # Blue color in BGR
-                color = (255, 0, 0)
-                
-                # Line thickness of 2 px
-                thickness = 2
-                
-                # Using cv2.polylines() method
-                # Draw a Blue polygon with 
-                # thickness of 1 px
-                
-                image = cv2.polylines(frame, [pts], 
-                        isClosed, color, thickness)
+
                 
 
     def draw_detected_ball(self,ball_detected_list, frame):

@@ -31,6 +31,9 @@ def worker(stop_event,ui,MainWindow,side,q):
     actual_fps = cap.get(cv2.CAP_PROP_FPS)
     actual_format = cap.get(cv2.CAP_PROP_FOURCC)
 
+    MainWindow.curr_width = int(actual_width)
+    MainWindow.curr_height = int(actual_height)
+
     print(f"Resolución: {actual_width}x{actual_height}")
     print(f"FPS: {actual_fps}")
     print(f"Formato: {actual_format}")
@@ -40,15 +43,6 @@ def worker(stop_event,ui,MainWindow,side,q):
     init=time.time()
     cnt=0
     cntf=-1
-    background_subs=0
-
-    if background_subs==1:
-
-        # Read the first frame
-        ret, prev_frame = cap.read()
-        prev_frame = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)  # Convert to grayscale
-        # prev_frame=prev_frame[height1:height2,width1:width2]
-
 
     batch_size=4
     cFrame = frame_class.Frame()
@@ -87,12 +81,13 @@ def worker(stop_event,ui,MainWindow,side,q):
         cnt+=1
         if cnt%(framerate*5)==0:
             diff=time.time()-init
-            print("time after 5 sec: ",time.time()-init, ", cnt : ", cnt)
+            # print("time after 5 sec: ",time.time()-init, ", cnt : ", cnt)
+            if side == "L":
+                MainWindow.velL= str(diff)
+            if side == "R":
+                MainWindow.velR= str(diff)
 
             init=time.time()
-
-        if background_subs==1:
-            visualization.substracion(frame,side)
 
         if MainWindow.params["plot"]==1:
             

@@ -6,3 +6,5 @@ class Frame():
         self.frameList=[]
         self.side=""
         self.tsList=[]
+        self.results=[]
+        self.player_list=[]

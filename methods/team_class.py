@@ -1,8 +1,13 @@
 from collections import deque
+from methods import player_class
 
 class TEAM():
-    def __init__(self):
+    def __init__(self,id):
         
+        self.id = id
+        if id ==0:
+            self.fill_player_list()
+
         self.frameList_BottomLine=[]
         self.acum1=[]
         self.acum2=[]
@@ -128,4 +133,9 @@ class TEAM():
     ball_in_top_list=[]
 
     trackers=[]
+
+    def fill_player_list(self):
+        for i in range(4):
+            player = player_class.PLAYER(i,self.id)
+            self.player_list.append(player)
 

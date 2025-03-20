@@ -43,10 +43,13 @@ def open_folder():
 
 def start():
 
-    perm_team = team_class.TEAM()
-    params_pos = parameters.PARAMS()
+    perm_team = team_class.TEAM(0)
+    params = parameters.PARAMS()
     folder = MainWindow.params["folder_name"]
-    params_pos.load_data(folder)
+    MainWindow.curr_width = MainWindow.params["width"]
+    MainWindow.curr_width = MainWindow.params["height"]
+    
+    
 
     HOME = os.getcwd()
     # local_model = YOLO(f'{HOME}/models/best.pt').to("cuda")
@@ -68,9 +71,11 @@ def start():
         time.sleep(1)
         ## THREADS TO DETECTIONS
         threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1), daemon=True).start()
+        time.sleep(2)
         threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2), daemon=True).start()
         time.sleep(5)
         ## THREADS TO VIDEO SOURCE
+        params.load_data(folder,MainWindow)
         threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"L",q_saveL,q1_detectL), daemon=True).start()
         threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"R",q_saveR,q1_detectR), daemon=True).start()
         time.sleep(2)
@@ -80,8 +85,8 @@ def start():
         MainWindow.params["start_file"]=1
         
         ## THREADS TO SAVE VIDEO
-        threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,"L",q_saveL), daemon=True).start()
-        threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,"R",q_saveR), daemon=True).start()
+        threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,params,"L",q_saveL), daemon=True).start()
+        threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,params,"R",q_saveR), daemon=True).start()
         time.sleep(1)
         ## THREADS TO DETECTIONS
         threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1), daemon=True).start()
@@ -92,7 +97,8 @@ def start():
         threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"R",q1_detectR), daemon=True).start()
         time.sleep(3)
         ## THREAD TO STATISTICS
-        threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3_stad,perm_team,q_saveL,q_saveR,params_pos, model1), daemon=True).start()
+        params.load_data(folder,MainWindow)
+        threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3_stad,perm_team,q_saveL,q_saveR,params, model1), daemon=True).start()
 
 def stop():
     MainWindow.params["start"]=0
@@ -116,8 +122,9 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     
     MainWindow = myApp_class.MyApp()
-    ui = VarUI.Ui_MainWindow()
-    ui.setupUi(MainWindow)
+    # ui = VarUI.Ui_MainWindow()
+    # ui.setupUi(MainWindow)
+    ui=MainWindow.ui
 
     # print(MainWindow.params)
     ui.start_pushButton.clicked.connect(start)

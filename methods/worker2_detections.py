@@ -25,7 +25,8 @@ def worker(stop_event,ui,MainWindow,q1,q2,model):
         cnt+=5
         if cnt%200==0:
             # print("cnt : ", cnt)
-            print("q1.qsize() : ",q1.qsize())
+            # print("q1.qsize() : ",q1.qsize())
+            MainWindow.qstad_size = str(q1.qsize())
 
         results=[]
         height, width, _ = cFrame.frameList[0].shape
@@ -38,5 +39,5 @@ def worker(stop_event,ui,MainWindow,q1,q2,model):
         new_cFrame.side=cFrame.side
         new_cFrame.results = results
 
-        # q2.put(new_cFrame)
+        q2.put(new_cFrame)
 

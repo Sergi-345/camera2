@@ -217,6 +217,97 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.label_17.setFont(font)
         self.label_17.setObjectName("label_17")
+        self.qdetR_size_textEdit = QtWidgets.QTextEdit(parent=self.centralwidget)
+        self.qdetR_size_textEdit.setEnabled(False)
+        self.qdetR_size_textEdit.setGeometry(QtCore.QRect(1490, 20, 51, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.qdetR_size_textEdit.setFont(font)
+        self.qdetR_size_textEdit.setObjectName("qdetR_size_textEdit")
+        self.label_18 = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label_18.setGeometry(QtCore.QRect(1400, 20, 81, 20))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_18.setFont(font)
+        self.label_18.setObjectName("label_18")
+        self.qdetL_size_textEdit = QtWidgets.QTextEdit(parent=self.centralwidget)
+        self.qdetL_size_textEdit.setEnabled(False)
+        self.qdetL_size_textEdit.setGeometry(QtCore.QRect(1490, 50, 51, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.qdetL_size_textEdit.setFont(font)
+        self.qdetL_size_textEdit.setObjectName("qdetL_size_textEdit")
+        self.label_19 = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label_19.setGeometry(QtCore.QRect(1400, 50, 81, 20))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_19.setFont(font)
+        self.label_19.setObjectName("label_19")
+        self.qsaveR_size_textEdit = QtWidgets.QTextEdit(parent=self.centralwidget)
+        self.qsaveR_size_textEdit.setEnabled(False)
+        self.qsaveR_size_textEdit.setGeometry(QtCore.QRect(1490, 110, 51, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.qsaveR_size_textEdit.setFont(font)
+        self.qsaveR_size_textEdit.setObjectName("qsaveR_size_textEdit")
+        self.label_20 = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label_20.setGeometry(QtCore.QRect(1400, 140, 81, 20))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_20.setFont(font)
+        self.label_20.setObjectName("label_20")
+        self.qsaveL_size_textEdit = QtWidgets.QTextEdit(parent=self.centralwidget)
+        self.qsaveL_size_textEdit.setEnabled(False)
+        self.qsaveL_size_textEdit.setGeometry(QtCore.QRect(1490, 140, 51, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.qsaveL_size_textEdit.setFont(font)
+        self.qsaveL_size_textEdit.setObjectName("qsaveL_size_textEdit")
+        self.label_21 = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label_21.setGeometry(QtCore.QRect(1400, 110, 81, 20))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_21.setFont(font)
+        self.label_21.setObjectName("label_21")
+        self.qstad_size_textEdit = QtWidgets.QTextEdit(parent=self.centralwidget)
+        self.qstad_size_textEdit.setEnabled(False)
+        self.qstad_size_textEdit.setGeometry(QtCore.QRect(1490, 80, 51, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.qstad_size_textEdit.setFont(font)
+        self.qstad_size_textEdit.setObjectName("qstad_size_textEdit")
+        self.label_22 = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label_22.setGeometry(QtCore.QRect(1400, 80, 81, 20))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_22.setFont(font)
+        self.label_22.setObjectName("label_22")
+        self.velR_textEdit = QtWidgets.QTextEdit(parent=self.centralwidget)
+        self.velR_textEdit.setEnabled(False)
+        self.velR_textEdit.setGeometry(QtCore.QRect(1600, 20, 51, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.velR_textEdit.setFont(font)
+        self.velR_textEdit.setObjectName("velR_textEdit")
+        self.label_23 = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label_23.setGeometry(QtCore.QRect(1550, 20, 51, 20))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_23.setFont(font)
+        self.label_23.setObjectName("label_23")
+        self.velL_textEdit = QtWidgets.QTextEdit(parent=self.centralwidget)
+        self.velL_textEdit.setEnabled(False)
+        self.velL_textEdit.setGeometry(QtCore.QRect(1600, 60, 51, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.velL_textEdit.setFont(font)
+        self.velL_textEdit.setObjectName("velL_textEdit")
+        self.label_24 = QtWidgets.QLabel(parent=self.centralwidget)
+        self.label_24.setGeometry(QtCore.QRect(1550, 60, 51, 20))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_24.setFont(font)
+        self.label_24.setObjectName("label_24")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1694, 22))
@@ -335,3 +426,45 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0.015</span></p></body></html>"))
         self.label_17.setText(_translate("MainWindow", "sleep(s)-processed video"))
+        self.qdetR_size_textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
+        self.label_18.setText(_translate("MainWindow", "q_detL.size"))
+        self.qdetL_size_textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
+        self.label_19.setText(_translate("MainWindow", "q_detR.size"))
+        self.qsaveR_size_textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
+        self.label_20.setText(_translate("MainWindow", "q_saveR.size"))
+        self.qsaveL_size_textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
+        self.label_21.setText(_translate("MainWindow", "q_saveL.size"))
+        self.qstad_size_textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
+        self.label_22.setText(_translate("MainWindow", "q_stad.size"))
+        self.velR_textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
+        self.label_23.setText(_translate("MainWindow", "velR"))
+        self.velL_textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
+        self.label_24.setText(_translate("MainWindow", "velL"))

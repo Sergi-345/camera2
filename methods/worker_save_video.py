@@ -1,6 +1,9 @@
 from methods import visualization
+from methods import player_draw
 import cv2
 import time
+from PyQt6.QtCore import QThread, QTimer
+from PyQt6.QtCore import QMetaObject, Qt
 
 
 
@@ -36,7 +39,8 @@ def save_video(stop_event,ui,MainWindow,side,q):
             # print("cnt : ", cnt)
             print("qsave.qsize(): ",q.qsize())
 
-def save_video_processed(stop_event,ui,MainWindow,side,q):
+
+def save_video_processed(stop_event,ui,MainWindow,params,side,q):
 
     # 🎥 Configurar el guardado del video
     output_file = MainWindow.params["folder_name"]+"/output_"+side+"_processed.avi"
@@ -57,14 +61,12 @@ def save_video_processed(stop_event,ui,MainWindow,side,q):
     while not stop_event.is_set(): 
         
         cFrame= q.get()
-        # if q:
-        #     cFrame = q.popleft()  # Safe pop
-        # else:
-        #     time.sleep(0.016)
-        #     continue
 
         if MainWindow.params["visualise"]==1:
-            visualization.update_frame(cFrame.results,ui,cFrame.side)
+
+            player_draw.draw_players_quadrant(cFrame,params)
+
+            visualization.update_frame(cFrame.results,ui,side)
 
         if MainWindow.params["record"]==1:
             for result in cFrame.results:
@@ -72,10 +74,12 @@ def save_video_processed(stop_event,ui,MainWindow,side,q):
                 out.write(resized_frame)
 
         cnt+=1
-            # for frame in cFrame.frameList:
-            #     cnt+=1
-            #     out.write(frame)
+        if cnt%10==0:
+            if side=="L":
+                MainWindow.qsaveL_size = str(q.qsize())
+            if side=="R":
+                MainWindow.qsaveR_size = str(q.qsize())
+                # QTimer.singleShot(0, lambda: MainWindow.update_ui())
+                QMetaObject.invokeMethod(MainWindow, "update_ui", Qt.ConnectionType.QueuedConnection)
 
-        if cnt%100==0:
-            # print("cnt : ", cnt)
-            print("qsave.qsize(): ",q.qsize())
+
