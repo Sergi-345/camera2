@@ -9,11 +9,10 @@ from ultralytics import YOLO
 
 
 
-def worker(stop_event,ui,MainWindow,q1,q2,model):
+def worker(stop_event,ui,MainWindow,q1,q2,model,side):
 
 
-    # width= MainWindow.params["cut_width"]
-    # height= MainWindow.params["cut_height"]
+
     cnt=0
     while True:
         if stop_event.is_set():
@@ -24,9 +23,13 @@ def worker(stop_event,ui,MainWindow,q1,q2,model):
             return
         cnt+=5
         if cnt%200==0:
+            if side=="L":
+                MainWindow.qdetL_size = str(q1.qsize())
+            if side=="R":
+                MainWindow.qdetR_size = str(q1.qsize())
             # print("cnt : ", cnt)
             # print("q1.qsize() : ",q1.qsize())
-            MainWindow.qstad_size = str(q1.qsize())
+            
 
         results=[]
         height, width, _ = cFrame.frameList[0].shape

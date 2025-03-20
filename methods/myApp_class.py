@@ -25,6 +25,8 @@ class MyApp(QtWidgets.QMainWindow):
         self.qsaveR_size=0
         self.velR=0
         self.velL=0
+        self.qdetL_size=0
+        self.qdetR_size=0
         
 
     def closeEvent(self, event):
@@ -64,10 +66,11 @@ class MyApp(QtWidgets.QMainWindow):
     
     @pyqtSlot()
     def update_ui(self):
-        print("AAAAA")
-        self.ui.qstad_size_textEdit.setText(str(self.qstad_size))
         self.ui.qsaveL_size_textEdit.setText(str(self.qsaveL_size))
         self.ui.qsaveR_size_textEdit.setText(str(self.qsaveR_size))
+        self.ui.qdetL_size_textEdit.setText(str(self.qdetL_size))
+        self.ui.qdetR_size_textEdit.setText(str(self.qdetR_size))
+        self.ui.qstad_size_textEdit.setText(str(self.qstad_size))
         self.ui.velL_textEdit.setText(str(self.velL))
         self.ui.velR_textEdit.setText(str(self.velR))
 

@@ -66,12 +66,12 @@ def save_video_processed(stop_event,ui,MainWindow,params,side,q):
 
             player_draw.draw_players_quadrant(cFrame,params)
 
+            
             visualization.update_frame(cFrame.results,ui,side)
 
         if MainWindow.params["record"]==1:
             for result in cFrame.results:
-                resized_frame = cv2.resize(result.orig_img, frame_size)
-                out.write(resized_frame)
+                out.write(result.orig_img)
 
         cnt+=1
         if cnt%10==0:

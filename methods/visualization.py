@@ -29,23 +29,31 @@ def update_frame(results,gui,side):
             cv2.putText(orig_img, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
 
-        height, width, bytesPerComponent = orig_img.shape
+        # height, width, bytesPerComponent = orig_img.shape
 
-        qimage_width = 600
-        aspect_ratio = width / height
-        qimage_height = int(qimage_width * aspect_ratio)
+        # qimage_width = 600
+        # aspect_ratio = width / height
+        # qimage_height = int(qimage_width * aspect_ratio)
 
-        resized_frame = cv2.resize(orig_img, (qimage_width, qimage_height))
+        # resized_frame = cv2.resize(orig_img, (qimage_width, qimage_height))
+
+        height_resize=400
+        width_resize=500
+        frame_size = (int(width_resize), int(height_resize))
+
+        resized_frame = cv2.resize(result.orig_img, frame_size)
 
         cv2.cvtColor(resized_frame, cv2.COLOR_BGR2RGB, resized_frame)   
-        bytesPerLine = 3 * qimage_width
-        QImg = QImage(resized_frame.data, qimage_width, qimage_height, bytesPerLine,QtGui.QImage.Format.Format_RGB888
+        bytesPerLine = 3 * width_resize
+        QImg = QImage(resized_frame.data, width_resize, height_resize, bytesPerLine,QtGui.QImage.Format.Format_RGB888
     )
         pixmap = QPixmap.fromImage(QImg)
         if side=="L":
             gui.initFrame_label.setPixmap(pixmap)
         elif side=="R":
             gui.initFrame2_label.setPixmap(pixmap)
+
+
 
 
 def update_frame2(frame, gui):

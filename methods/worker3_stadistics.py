@@ -26,7 +26,7 @@ def worker(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR,params,model):
         
         
         if cnt%100==0:
-            print("q3.qsize(): ",q3.qsize())
+            MainWindow.qstad_size = str(q3.qsize())
 
         ### Syncronization
         buffer.add_data(cFrame)

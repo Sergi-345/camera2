@@ -70,9 +70,9 @@ def start():
         threading.Thread(target=worker_save_video.save_video,  args=(stop_event,ui,MainWindow,"R",q_saveR), daemon=True).start()
         time.sleep(1)
         ## THREADS TO DETECTIONS
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1), daemon=True).start()
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1,"L"), daemon=True).start()
         time.sleep(2)
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2), daemon=True).start()
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2,"R"), daemon=True).start()
         time.sleep(5)
         ## THREADS TO VIDEO SOURCE
         params.load_data(folder,MainWindow)
@@ -89,8 +89,8 @@ def start():
         threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,params,"R",q_saveR), daemon=True).start()
         time.sleep(1)
         ## THREADS TO DETECTIONS
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1), daemon=True).start()
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2), daemon=True).start()
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1,"L"), daemon=True).start()
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2,"R"), daemon=True).start()
         time.sleep(5)
         ## THREADS TO VIDEO SOURCE
         threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"L",q1_detectL), daemon=True).start()
