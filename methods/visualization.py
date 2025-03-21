@@ -39,9 +39,9 @@ def update_frame(results,gui,side, width_resize,height_resize):
     )
         result.orig_img=resized_frame
         pixmap = QPixmap.fromImage(QImg)
-        if side=="L":
+        if side==0:
             gui.initFrame_label.setPixmap(pixmap)
-        elif side=="R":
+        elif side==1:
             gui.initFrame2_label.setPixmap(pixmap)
 
 

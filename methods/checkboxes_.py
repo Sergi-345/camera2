@@ -12,10 +12,15 @@ def on_checkbox_changed(MainWindow,ui):
     else:
         MainWindow.params["plot"]=  0
 
-    if ui.checkBox_visualise.isChecked():
-        MainWindow.params["visualise"]=  1
+    if ui.checkBox_visualise_processed.isChecked():
+        MainWindow.params["visualise_processed"]=  1
     else:
-        MainWindow.params["visualise"]=  0
+        MainWindow.params["visualise_processed"]=  0
+
+    if ui.checkBox_visualise_raw.isChecked():
+        MainWindow.params["visualise_raw"]=  1
+    else:
+        MainWindow.params["visualise_raw"]=  0
 
     if ui.checkBox_from_file.isChecked():
         MainWindow.params["from_file"]=  1

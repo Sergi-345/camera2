@@ -136,24 +136,11 @@ p, li { white-space: pre-wrap; }
      <string/>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox_record_video">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>20</y>
-      <width>131</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>record video</string>
-    </property>
-   </widget>
    <widget class="QCheckBox" name="checkBox_plot_video">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>50</y>
+      <x>210</x>
+      <y>20</y>
       <width>131</width>
       <height>23</height>
      </rect>
@@ -270,17 +257,17 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox_visualise">
+   <widget class="QCheckBox" name="checkBox_visualise_raw">
     <property name="geometry">
      <rect>
-      <x>240</x>
-      <y>80</y>
+      <x>210</x>
+      <y>60</y>
       <width>131</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>visualise</string>
+     <string>visualise raw</string>
     </property>
    </widget>
    <widget class="QCheckBox" name="checkBox_from_file">
@@ -1051,6 +1038,32 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>velL</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_record_video">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>0</y>
+      <width>131</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>record video</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_visualise_processed">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>40</y>
+      <width>151</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>visualise processed</string>
     </property>
    </widget>
   </widget>

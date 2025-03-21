@@ -103,7 +103,6 @@ def check_each_player_in_different_height(perm_team):
     return False
 
 def check_ball_size(perm_team):
-    size_list=[]
     cnt=-1
     for ball in perm_team.ballBounceAfterKick_list:
         cnt+=1
@@ -113,8 +112,6 @@ def check_ball_size(perm_team):
         if size >400:
             perm_team.ballBounceAfterKick_list.pop(cnt)
 
-        # size_list.append(width*height)
-        # print("size_list : ", size_list)
 
 
 

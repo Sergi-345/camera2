@@ -387,37 +387,37 @@ def CheckInitialPartners(perm_team,params):
         if player.quadrant_line==4:
             player.partner=2
 
-        # print("player.quadrant_line : ", player.partner)
-
 def check_initial_id(perm_team,params):
 
     if perm_team.initial_id==0: # Initiate player in each position
         playerInPos_vect = [0,0,0,0]
         for player in perm_team.player_list:
-            for quadrant in params.full_quadr_matrix[0][0]: #Upper Left
-                if player.quadrant==quadrant:
-                    line=1
-                    player.quadrant_line=line
-                    playerInPos_vect[line-1]=1
-                    perm_team.player_height[0][0]=line
-            for quadrant in params.full_quadr_matrix[0][1]: #Down Left
-                if player.quadrant==quadrant:
-                    line=3
-                    player.quadrant_line=line
-                    playerInPos_vect[line-1]=1
-                    perm_team.player_height[0][1]=line
-            for quadrant in params.full_quadr_matrix[1][0]: #Upper Right
-                if player.quadrant==quadrant:
-                    line=2
-                    player.quadrant_line=line
-                    playerInPos_vect[line-1]=1
-                    perm_team.player_height[1][0]=line
-            for quadrant in params.full_quadr_matrix[1][1]: #Down Right
-                if player.quadrant==quadrant:
-                    line=4
-                    player.quadrant_line=line
-                    playerInPos_vect[line-1]=1
-                    perm_team.player_height[1][1]=line
+            if player.side==0:
+                for quadrant in params.quadr_matrix[0]: #Upper Left
+                    if player.quadrant==quadrant:
+                        line=1
+                        player.quadrant_line=line
+                        playerInPos_vect[line-1]=1
+                        perm_team.player_height[0][0]=line
+                for quadrant in params.quadr_matrix[1]: #Down Left
+                    if player.quadrant==quadrant:
+                        line=3
+                        player.quadrant_line=line
+                        playerInPos_vect[line-1]=1
+                        perm_team.player_height[0][1]=line
+            if player.side==1:
+                for quadrant in params.quadr_matrix[0]: #Upper Right
+                    if player.quadrant==quadrant:
+                        line=2
+                        player.quadrant_line=line
+                        playerInPos_vect[line-1]=1
+                        perm_team.player_height[1][0]=line
+                for quadrant in params.quadr_matrix[1]: #Down Right
+                    if player.quadrant==quadrant:
+                        line=4
+                        player.quadrant_line=line
+                        playerInPos_vect[line-1]=1
+                        perm_team.player_height[1][1]=line
 
         if sum(playerInPos_vect)==4: # 
             for player in perm_team.player_list:

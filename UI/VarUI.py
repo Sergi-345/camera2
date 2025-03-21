@@ -50,11 +50,8 @@ class Ui_MainWindow(object):
         self.initFrame_label.setAutoFillBackground(True)
         self.initFrame_label.setText("")
         self.initFrame_label.setObjectName("initFrame_label")
-        self.checkBox_record_video = QtWidgets.QCheckBox(parent=self.centralwidget)
-        self.checkBox_record_video.setGeometry(QtCore.QRect(240, 20, 131, 23))
-        self.checkBox_record_video.setObjectName("checkBox_record_video")
         self.checkBox_plot_video = QtWidgets.QCheckBox(parent=self.centralwidget)
-        self.checkBox_plot_video.setGeometry(QtCore.QRect(240, 50, 131, 23))
+        self.checkBox_plot_video.setGeometry(QtCore.QRect(210, 20, 131, 23))
         self.checkBox_plot_video.setObjectName("checkBox_plot_video")
         self.brightness_pushButton = QtWidgets.QPushButton(parent=self.centralwidget)
         self.brightness_pushButton.setGeometry(QtCore.QRect(620, 70, 121, 23))
@@ -85,9 +82,9 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.folder_name_textEdit.setFont(font)
         self.folder_name_textEdit.setObjectName("folder_name_textEdit")
-        self.checkBox_visualise = QtWidgets.QCheckBox(parent=self.centralwidget)
-        self.checkBox_visualise.setGeometry(QtCore.QRect(240, 80, 131, 23))
-        self.checkBox_visualise.setObjectName("checkBox_visualise")
+        self.checkBox_visualise_raw = QtWidgets.QCheckBox(parent=self.centralwidget)
+        self.checkBox_visualise_raw.setGeometry(QtCore.QRect(210, 60, 131, 23))
+        self.checkBox_visualise_raw.setObjectName("checkBox_visualise_raw")
         self.checkBox_from_file = QtWidgets.QCheckBox(parent=self.centralwidget)
         self.checkBox_from_file.setGeometry(QtCore.QRect(400, 20, 131, 23))
         self.checkBox_from_file.setObjectName("checkBox_from_file")
@@ -308,6 +305,12 @@ class Ui_MainWindow(object):
         font.setPointSize(10)
         self.label_24.setFont(font)
         self.label_24.setObjectName("label_24")
+        self.checkBox_record_video = QtWidgets.QCheckBox(parent=self.centralwidget)
+        self.checkBox_record_video.setGeometry(QtCore.QRect(210, 0, 131, 23))
+        self.checkBox_record_video.setObjectName("checkBox_record_video")
+        self.checkBox_visualise_processed = QtWidgets.QCheckBox(parent=self.centralwidget)
+        self.checkBox_visualise_processed.setGeometry(QtCore.QRect(210, 40, 151, 23))
+        self.checkBox_visualise_processed.setObjectName("checkBox_visualise_processed")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1694, 22))
@@ -337,7 +340,6 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">60</span></p></body></html>"))
         self.label_13.setText(_translate("MainWindow", "fps output"))
-        self.checkBox_record_video.setText(_translate("MainWindow", "record video"))
         self.checkBox_plot_video.setText(_translate("MainWindow", "plot video"))
         self.brightness_pushButton.setText(_translate("MainWindow", "Brightness"))
         self.brightness_textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
@@ -356,7 +358,7 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-        self.checkBox_visualise.setText(_translate("MainWindow", "visualise"))
+        self.checkBox_visualise_raw.setText(_translate("MainWindow", "visualise raw"))
         self.checkBox_from_file.setText(_translate("MainWindow", "from file"))
         self.exp_name_textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -468,3 +470,5 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:\'Ubuntu\'; font-size:10pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'MS Shell Dlg 2\';\">0</span></p></body></html>"))
         self.label_24.setText(_translate("MainWindow", "velL"))
+        self.checkBox_record_video.setText(_translate("MainWindow", "record video"))
+        self.checkBox_visualise_processed.setText(_translate("MainWindow", "visualise processed"))

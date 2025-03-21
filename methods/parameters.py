@@ -4,6 +4,7 @@ from shapely.geometry import Point, Polygon
 import json
 import matplotlib.pyplot as plt
 import numpy as np
+import copy
 
 
 class PARAMS():
@@ -11,13 +12,14 @@ class PARAMS():
         self.pL_real = []
         ## create self.PL_real
         for p in self.pR_real:
-            new_p = p
+            new_p = copy.deepcopy(p)
             new_p[0]=-new_p[0]
             self.pL_real.append(new_p)
 
         self.p_map=[]
         self.p_map.append(self.pL_real)
         self.p_map.append(self.pR_real)
+        print("self.p_map : ", self.p_map)
 
     data=[]
     calibration=0

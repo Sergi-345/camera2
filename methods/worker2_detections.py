@@ -30,17 +30,16 @@ def worker(stop_event,ui,MainWindow,q1,q2,model,side):
             # print("cnt : ", cnt)
             # print("q1.qsize() : ",q1.qsize())
             
-
         results=[]
         height, width, _ = cFrame.frameList[0].shape
         imgsz = [width,height]
         results = model.predict(source=cFrame.frameList,batch=len(cFrame.frameList), conf=0.2, iou=0.9,imgsz=imgsz,verbose=False,device=0,half=True)
 
+        
         new_cFrame = frame_class.Frame()
         new_cFrame.results=results
         new_cFrame.tsList=cFrame.tsList
         new_cFrame.side=cFrame.side
-        new_cFrame.results = results
 
         q2.put(new_cFrame)
 

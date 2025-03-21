@@ -11,6 +11,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import *
 from PyQt6.QtCore import (QCoreApplication, QObject, QRunnable, QThread,
                           QThreadPool, pyqtSignal, pyqtSlot, Qt)
+from PyQt6.QtCore import QMetaObject, Qt
 
 
 
@@ -129,7 +130,13 @@ def worker(stop_event,ui,MainWindow,side,q_save,q_detect):
 
         cnt+=1
         if cnt%(framerate*5)==0:
-            print("time after 5 sec: ",time.time()-init, ", cnt : ", cnt)
+            diff=time.time()-init
+            # print("time after 5 sec: ",time.time()-init, ", cnt : ", cnt)
+            if side == "L":
+                MainWindow.velL= str(diff)
+                QMetaObject.invokeMethod(MainWindow, "update_ui", Qt.ConnectionType.QueuedConnection)
+            if side == "R":
+                MainWindow.velR= str(diff)
             init=time.time()
 
         ### Modify frame size
@@ -166,8 +173,8 @@ def worker(stop_event,ui,MainWindow,side,q_save,q_detect):
                 
                 cntf=-1
 
-        if MainWindow.params["visualise"]==1:
-            if cnt%20==0:
+        if MainWindow.params["visualise_raw"]==1:
+            if cnt%5==0:
                 update_frame(frame,ui,side)
 
         if 0xFF == ord('q'):

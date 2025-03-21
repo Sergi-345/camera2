@@ -4,15 +4,6 @@ from shapely.geometry import Point, Polygon
 from methods import ball_checks2
 import random
 
-def playerInDef_ballInTransition(player_list,newBall,params):
-    for player in player_list:
-        if player.id == newBall.inPlayerId:
-            if match_checks.check_player_in_defense_quadrant(player,params):
-                if match_checks.check_ball_in_transition_quadrant(newBall,params):
-                    if match_checks.check_ball_lower_than_threshold(newBall,params):
-
-                        return True
-    return False
 
 def check_only_one_ball_in_closer_quadrants(perm_team,new_ball_list):
     if perm_team.reception_quadrant_ball==7 or perm_team.reception_quadrant_ball==10:
@@ -77,21 +68,6 @@ def check_bounce_finished(perm_team):
         return True
     return False
 
-def check_ball_half_upper_reception_quadrant(perm_team,params,ball):
-
-    q=perm_team.reception_quadrant_ball
-    if q==1: # Up Left
-        x_q=params.points_image[11][0]
-        if ball.pos.lowerMidX< x_q:
-            return True
-    elif q==4: # Up Right
-        x_q=params.points_image[9][0]
-        if ball.pos.lowerMidX> x_q:
-            return True
-    else:
-        return True
-    return False
-
 
 def check_ball_inside_quadrant(perm_team,params,ball):
     # Check if ball is in reception quadrant
@@ -105,43 +81,28 @@ def check_ball_inside_quadrant(perm_team,params,ball):
     points_vect.append(point2)
     points_vect.append(point3)
 
-    ballInsideQuadrant=False
     q=perm_team.reception_quadrant_ball
     for point in points_vect:
-
         if q==1: # Up Left
-            if point.within(params.poly_vect[q]):
+            if point.within(params.poly_img_list[ball.side][q]):
                 return True
-            # if ball.from_background==1 and point.within(params.poly_vect[0]): # Defense quadrant
-            #     return True
         if q==4: # Up Right
-            if point.within(params.poly_vect[q]):
-                return True
-            # if ball.from_background==1 and point.within(params.poly_vect[3]): # Defense quadrant
-            #     return True
-        if q==7: # Up Right
-            if point.within(params.poly_vect[q]):
-                return True
-        if q==10: # Up Right
-            if point.within(params.poly_vect[q]):
+            if point.within(params.poly_img_list[ball.side][q]):
                 return True
     return False
 
 
 def check_ball_in_attack(perm_team,params,ball):
-        # Check if ball is in reception quadrant
+    # Check if ball is in reception quadrant
     px=ball.pos.lowerMidX
     py=ball.pos.lowerMidY
     point=Point([px,py])
 
-    ballInsideQuadrant=False
-    # q=perm_team.reception_quadrant_ball
-    attack_q_vect=[2,8,5,11]
+    attack_q_vect=[2,5]
     for q in attack_q_vect:
-        if point.within(params.poly_vect[q])==True:
-            ballInsideQuadrant = point.within(params.poly_vect[q])
-            return ballInsideQuadrant
-    return ballInsideQuadrant
+        if point.within(params.poly_img_list[ball.side][q])==True:
+            return True
+    return False
 
 def check_ball_inPlayer(player_list,ball):
     inPlayer=False
@@ -158,25 +119,25 @@ def check_ball_inPlayer(player_list,ball):
     pyLowerR=ball.pos.yEnd
 
     for player in player_list:
-        x0=player.pos.x0
-        y0=player.pos.y0
-        xEnd=player.pos.xEnd
-        yEnd=player.pos.yEnd
+        if ball.side==player.side:
+            x0=player.pos.x0
+            y0=player.pos.y0
+            xEnd=player.pos.xEnd
+            yEnd=player.pos.yEnd
 
-        # Check al 4 corners of the ball
-        if is_point_in_rectangle(x0,y0,xEnd,yEnd,pxUpR,pyUpR)==True: # Up_Right
-            inPlayer=True
-            ball.inPlayerId=player.id
-        if is_point_in_rectangle(x0,y0,xEnd,yEnd,pxUpL,pyUpL)==True: # Up_left
-            inPlayer=True
-            ball.inPlayerId=player.id
-        if is_point_in_rectangle(x0,y0,xEnd,yEnd,pxLowerR,pyLowerR)==True: # Lower_Right
-            inPlayer=True
-            ball.inPlayerId=player.id
-        if is_point_in_rectangle(x0,y0,xEnd,yEnd,pxLowerL,pyLowerL)==True: # Lower_left
-            inPlayer=True
-            ball.inPlayerId=player.id
-        
+            # Check al 4 corners of the ball
+            if is_point_in_rectangle(x0,y0,xEnd,yEnd,pxUpR,pyUpR)==True: # Up_Right
+                inPlayer=True
+                ball.inPlayerId=player.id
+            if is_point_in_rectangle(x0,y0,xEnd,yEnd,pxUpL,pyUpL)==True: # Up_left
+                inPlayer=True
+                ball.inPlayerId=player.id
+            if is_point_in_rectangle(x0,y0,xEnd,yEnd,pxLowerR,pyLowerR)==True: # Lower_Right
+                inPlayer=True
+                ball.inPlayerId=player.id
+            if is_point_in_rectangle(x0,y0,xEnd,yEnd,pxLowerL,pyLowerL)==True: # Lower_left
+                inPlayer=True
+                ball.inPlayerId=player.id
         
     return inPlayer
 
@@ -195,10 +156,9 @@ def check_ball_defensive_quadrants_of_serve_side(perm_team,params,newBall):
 
     ballInsideQuadrant=False
 
-    for height in params.full_quadr_matrix[perm_team.kick_side]:
-        q= height[0]
-        # print("q : ", q)
-        if point.within(params.poly_vect[q])==True:
+    for height in params.quadr_matrix:
+        q= height[0] ## Defensive quadrant
+        if point.within(params.poly_img_list[newBall.side][q])==True:
             ballInsideQuadrant = True
             return ballInsideQuadrant
     return ballInsideQuadrant
@@ -211,12 +171,11 @@ def check_ball_outside_quadrants(perm_team,params,newBall):
 
     ballOutsideQuadrants=True
 
-    for side in range(len(params.full_quadr_matrix)):
-        for height in range(len(params.full_quadr_matrix[side])):
-            for q in params.full_quadr_matrix[side][height]:
-                if point.within(params.poly_vect[q])==True:
-                    ballOutsideQuadrants = False
-                    return ballOutsideQuadrants 
+    for height in params.quadr_matrix:
+        for q in height:
+            if point.within(params.poly_img_list[newBall.side][q])==True:
+                ballOutsideQuadrants = False
+                return ballOutsideQuadrants 
     return ballOutsideQuadrants
 
 
@@ -231,11 +190,6 @@ def check_ball_quadrant(ball, params):
                 break
         
 
-def check_any_ball_in_field(perm_team):
-
-    if len(perm_team.ball_detected_background_list)>0:
-        return True
-    return False
 
 def check_ball_height(ball,params):
 
@@ -245,10 +199,3 @@ def check_ball_height(ball,params):
                 ball.height=height
                 ball.width=width
 
-
-def check_ball_in_top_of_player(ball_list,perm_team):
-    for player in perm_team.player_list:
-        for ball in perm_team.ball_in_top_list:
-            if ball.pos.lowerMidX-10 > player.pos.x0 and ball.pos.lowerMidX < player.pos.xEnd:
-                if ball.pos.lowerMidY > player.pos.y0 and ball.pos.lowerMidY < player.pos.y0+30:
-                    return True

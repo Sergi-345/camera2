@@ -75,10 +75,6 @@ def ids_management(perm_team,params):
 
     # ONLY HAPPENS ONCE AT THE BEGINNING
     tracking_checks.check_initial_id(perm_team,params)
-    # HAPPENS AFTER A CHANGE OF SIDE
-    # tracking_checks.check_new_id_after_side_change(perm_team,params)
-    # HAPPENS DURING THE GAME TO SEE IF SOME TEAM CHANGES PLAYER POSITIONS
-    # tracking_checks.check_update_ids(perm_team,params)
 
 
 
@@ -87,13 +83,15 @@ def stadistic_position_state(perm_team):
 
     for player in perm_team.player_list:
 
+        if player.id>4:
+            continue
         j=player.id-1
         i = player.quadrant
-        if i ==0 or i == 3 or i==6 or i==9:
+        if i ==0 or i == 3:
             perm_team.counter_in_defense[j]+=1
-        if i ==1 or i == 4 or i==7 or i==10:
+        if i ==1 or i == 4:
             perm_team.counter_in_transition[j]+=1
-        if i ==2 or i == 5 or i==8 or i==11:
+        if i ==2 or i == 5:
             perm_team.counter_in_attack[j]+=1
 
         # 0,3,6,9 - Defense

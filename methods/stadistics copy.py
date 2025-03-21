@@ -3,10 +3,6 @@ from methods import tracking
 from methods import tracking_checks
 from methods import team_class
 from methods import match_stats
-from methods import serve
-from methods import ball_stats
-from methods import player_stats
-from methods import match_checks
 
 def process(perm_team, results,params,model,cnt):
 
@@ -30,21 +26,20 @@ def process(perm_team, results,params,model,cnt):
 
     # match_stats.check_serveTeam(perm_team,params,cnt)
 
-    # SERVE MANAGEMENT
+    # player_stats.estimate_velocity(perm_team)
     serve.serve_detection(perm_team,params)
-    serve.serve_cancel(perm_team,params)
-    ball_stats.ball_bounce_detection(perm_team,params)
-
+    # serve.serve_cancel(perm_team,params,ball_detected_list)
+    # ball_stats.ball_bounce_detection(perm_team,ball_detected_list,params)
     tracking.stadistic_position_state(perm_team)
 
-    if cnt%30==0:
-        player_stats.coordinates_vector(perm_team,params)
+    # if cnt%30==0:
+    #     player_stats.coordinates_vector(perm_team,params)
 
-    if cnt%30==0:
-        player_stats.stadistic_km_done(perm_team,cnt)
+    # if cnt%30==0:
+    #     player_stats.stadistic_km_done(perm_team,cnt_w3)
 
-    if cnt%30==0:
-        match_checks.check_ball_size(perm_team)
+    # if cnt%30==0:
+    #     match_checks.check_ball_size(perm_team)
 
     # if cnt%120==0:
         # SEND DATA TO READIS

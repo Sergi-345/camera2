@@ -5,23 +5,18 @@ from methods import template_
 from methods import checkboxes_
 from methods import worker2_detections
 from methods import worker3_stadistics
+from methods import worker4_redisData
 from methods import team_class
 from methods import worker_save_video
 from methods import parameters
 import methods.worker_from_file as worker_from_file
 import methods.worker_from_camera as worker_from_camera
 import save_image
-import repeat
-import subprocess
-# import main_RT
+import redis
 import threading
 import queue as q
-from collections import deque
-
 import time
-import cv2
 import os
-import torch
 from ultralytics import YOLO
 # from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6 import QtCore, QtGui, QtWidgets
@@ -47,10 +42,11 @@ def start():
     params = parameters.PARAMS()
     folder = MainWindow.params["folder_name"]
     MainWindow.curr_width = MainWindow.params["width"]
-    MainWindow.curr_width = MainWindow.params["height"]
-    
-    
+    MainWindow.curr_height = MainWindow.params["height"]
 
+    ### INITIALISE REDIS CLIENT
+    redis_client = redis.Redis(host='localhost', port=6379, db=0)  # Assuming no password
+    
     HOME = os.getcwd()
     # local_model = YOLO(f'{HOME}/models/best.pt').to("cuda")
     model1 = YOLO(f'{HOME}/models/best.engine')
@@ -78,7 +74,13 @@ def start():
         params.load_data(folder,MainWindow)
         threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"L",q_saveL,q1_detectL), daemon=True).start()
         threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"R",q_saveR,q1_detectR), daemon=True).start()
-        time.sleep(2)
+        time.sleep(3)
+        ## THREAD TO STATISTICS
+        params.load_data(folder,MainWindow)
+        threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3_stad,perm_team,q_saveL,q_saveR,params, model1), daemon=True).start()
+        ## THREAD TO REDIS
+        time.sleep(3)
+        threading.Thread(target=worker4_redisData.worker,  args=(stop_event,perm_team,redis_client), daemon=True).start()
 
     else:
         
@@ -99,6 +101,9 @@ def start():
         ## THREAD TO STATISTICS
         params.load_data(folder,MainWindow)
         threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3_stad,perm_team,q_saveL,q_saveR,params, model1), daemon=True).start()
+        ## THREAD TO REDIS
+        time.sleep(3)
+        threading.Thread(target=worker4_redisData.worker,  args=(stop_event,perm_team,redis_client), daemon=True).start()
 
 def stop():
     MainWindow.params["start"]=0
@@ -152,10 +157,15 @@ if __name__ == "__main__":
     else:
         ui.checkBox_plot_video.setChecked(False)
 
-    if MainWindow.params["visualise"]==1:
-        ui.checkBox_visualise.setChecked(True)
+    if MainWindow.params["visualise_processed"]==1:
+        ui.checkBox_visualise_processed.setChecked(True)
     else:
-        ui.checkBox_visualise.setChecked(False)
+        ui.checkBox_visualise_processed.setChecked(False)
+
+    if MainWindow.params["visualise_raw"]==1:
+        ui.checkBox_visualise_raw.setChecked(True)
+    else:
+        ui.checkBox_visualise_raw.setChecked(False)
 
     if MainWindow.params["from_file"]==1:
         ui.checkBox_from_file.setChecked(True)
@@ -164,7 +174,8 @@ if __name__ == "__main__":
 
     ui.checkBox_record_video.stateChanged.connect(lambda: checkboxes_.on_checkbox_changed(MainWindow, ui)) 
     ui.checkBox_plot_video.stateChanged.connect(lambda: checkboxes_.on_checkbox_changed(MainWindow, ui)) 
-    ui.checkBox_visualise.stateChanged.connect(lambda: checkboxes_.on_checkbox_changed(MainWindow, ui)) 
+    ui.checkBox_visualise_raw.stateChanged.connect(lambda: checkboxes_.on_checkbox_changed(MainWindow, ui))
+    ui.checkBox_visualise_processed.stateChanged.connect(lambda: checkboxes_.on_checkbox_changed(MainWindow, ui))
     ui.checkBox_from_file.stateChanged.connect(lambda: checkboxes_.on_checkbox_changed(MainWindow, ui)) 
     ui.file_pushButton.clicked.connect(select_file)
     ui.court_points_L_pushButton.clicked.connect(lambda: template_.draw_points(MainWindow, actions,"L"))
