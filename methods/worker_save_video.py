@@ -1,10 +1,9 @@
 from methods import visualization
 from methods import player_draw
+from methods import ball_draw
+from methods import racket_draw
 import cv2
 import time
-from PyQt6.QtCore import QThread, QTimer
-from PyQt6.QtCore import QMetaObject, Qt
-
 
 
 def save_video(stop_event,ui,MainWindow,side,q):
@@ -50,11 +49,9 @@ def save_video_processed(stop_event,ui,MainWindow,params,side,q):
     actual_width = int(MainWindow.params["cut_width"])
     frame_size = (int(actual_width), int(actual_height))
     framerate=60
-
     height_resize=400
     width_resize=500
     frame_size = (int(width_resize), int(height_resize))
-
     out = cv2.VideoWriter(output_file, fourcc, framerate, frame_size)
 
     cnt=0
@@ -65,21 +62,23 @@ def save_video_processed(stop_event,ui,MainWindow,params,side,q):
         if MainWindow.params["visualise"]==1:
 
             player_draw.draw_players_quadrant(cFrame,params)
+            player_draw.draw_player(cFrame)
+            ball_draw.draw_ball(cFrame)
+            # racket_draw.draw_racket(cFrame)
 
-            
-            visualization.update_frame(cFrame.results,ui,side)
+            visualization.update_frame(cFrame.results,ui,side, width_resize,height_resize)
 
         if MainWindow.params["record"]==1:
             for result in cFrame.results:
                 out.write(result.orig_img)
 
         cnt+=1
-        if cnt%10==0:
+        if cnt%20==0:
             if side=="L":
                 MainWindow.qsaveL_size = str(q.qsize())
             if side=="R":
                 MainWindow.qsaveR_size = str(q.qsize())
                 # QTimer.singleShot(0, lambda: MainWindow.update_ui())
-                QMetaObject.invokeMethod(MainWindow, "update_ui", Qt.ConnectionType.QueuedConnection)
+                # QMetaObject.invokeMethod(MainWindow, "update_ui", Qt.ConnectionType.QueuedConnection)
 
 

@@ -16,6 +16,27 @@ def draw_players_quadrant(cFrame,params):
                 pts = pts.reshape((-1, 1, 2))
                 result.orig_img = cv2.polylines(result.orig_img,[pts],True,(255, 0, 0), 2)
                 
+def draw_player(cFrame):
+    cnt=-1
+    for result in cFrame.results:
+        cnt+=1
+        for player in cFrame.player_list[cnt]:
+            # print("player.id : ", player.id)
+            color=[[0, 255, 0],[0, 255, 255],[255, 0, 0],[0, 0, 255]]
+            if player.id>4:
+                continue
+            cv2.rectangle(result.orig_img, (player.pos.x0, player.pos.y0), (player.pos.xEnd, player.pos.yEnd), color[player.id-1], 2)
+            #Origin
+            org=[player.pos.x0, player.pos.y0]
+            cv2.putText(result.orig_img, str(player.id), org, cv2.FONT_HERSHEY_SIMPLEX , 1, color[player.id-1], 2, cv2.LINE_AA)   
+        
+        # # Center coordinates 
+        # center_coordinates = player.closest_point
+        # radius = 5
+        # thickness = 2
+        # image = cv2.circle(frame, center_coordinates, radius, (255, 0, 0) , thickness) 
+        # center_coordinates = player.closest_point2
+        # image = cv2.circle(frame, center_coordinates, radius, (255, 0, 255), thickness) 
 
 def plot_headMap(perm_team):
     # Generate sample data for the heat map

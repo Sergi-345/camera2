@@ -34,7 +34,7 @@ def worker(stop_event,ui,MainWindow,q1,q2,model,side):
         results=[]
         height, width, _ = cFrame.frameList[0].shape
         imgsz = [width,height]
-        results = model.predict(source=cFrame.frameList,batch=len(cFrame.frameList), conf=0.3, iou=0.8,imgsz=imgsz,verbose=False,device=0,half=True)
+        results = model.predict(source=cFrame.frameList,batch=len(cFrame.frameList), conf=0.2, iou=0.9,imgsz=imgsz,verbose=False,device=0,half=True)
 
         new_cFrame = frame_class.Frame()
         new_cFrame.results=results

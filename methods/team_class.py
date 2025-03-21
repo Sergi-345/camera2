@@ -5,8 +5,8 @@ class TEAM():
     def __init__(self,id):
         
         self.id = id
-        if id ==0:
-            self.fill_player_list()
+        # if id ==0:
+        #     self.fill_player_list()
 
         self.frameList_BottomLine=[]
         self.acum1=[]

@@ -8,8 +8,6 @@ class PLAYER():
         self.id=id
         self.teamId=teamId
         self.pos=pos_class.POS()
-        self.new_pos=pos_class.POS()
-        self.pos_old=pos_class.POS()
         self.vel_vect=[]
         self.hist=[]
         self.heatMap = np.zeros((self.nRows, self.nColumns))
@@ -22,9 +20,6 @@ class PLAYER():
         self.dist_done=0
 
 
-    # pos=[] # For detected players
-    # new_pos=[] # For permanent players
-    # old_pos=[] # For permanent players
 
     frame=[]
     counter_in_defense=0
@@ -32,6 +27,7 @@ class PLAYER():
     counter_in_attack=0
     counter_in_net=0
     position=5
+    pos=[]
     frame2=[]
     racket_list=[]
     closest_index=0

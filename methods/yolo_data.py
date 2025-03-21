@@ -1,5 +1,6 @@
 from methods import player_class
 from methods import ball_class
+from methods import racket_class
 from methods import coord
 from methods import ball_checks
 from methods import player_checks
@@ -8,19 +9,19 @@ from shapely.geometry import Point, Polygon
 def convertData(params,results,model,team):
     team.player_list=[]
     team.ball_list=[]
+    team.racket_list=[]
     
-    count=0
-    count2=0
-    count3=0
-
+    count_p=0
+    count_r=0
+    count_b=0
 
     cnt_side=-1
     for result in results:
         cnt_side+=1
         for box in result.boxes:
             if model.names[int(box.cls)] == "player" :
-                count+=1
-                player=player_class.PLAYER(count,team.id)
+                count_p+=1
+                player=player_class.PLAYER(count_p,team.id)
                 player.pos.x0=int(box.xyxy[0][0])
                 player.pos.y0=int(box.xyxy[0][1])
                 player.pos.xEnd=int(box.xyxy[0][2])
@@ -44,23 +45,20 @@ def convertData(params,results,model,team):
                 player.RealMidPointY = round(player.RealMidPointY,2)
 
                 player.conf=round(float(box.conf[0]),2)
-                player.id=count
+                player.id=count_p
                 team.player_list.append(player)
-                team.nPlayers=count
+                team.nPlayers=count_p
 
 
             if model.names[int(box.cls)] == "ball" :
-                count3+=1
+                count_b+=1
                 ball=[]
-                ball=ball_class.BALL(count3)
+                ball=ball_class.BALL(count_b)
                 ball.pos.x0=int(box.xyxy[0][0])
                 ball.pos.y0=int(box.xyxy[0][1])
                 ball.pos.xEnd=int(box.xyxy[0][2])
                 ball.pos.yEnd=int(box.xyxy[0][3])
                 ball.conf=round(float(box.conf[0]),2)
-
-                ball.pos.midPoint[0]=ball.pos.x0+(ball.pos.xEnd-ball.pos.x0)/2
-                ball.pos.midPoint[1]=ball.pos.y0+(ball.pos.yEnd-ball.pos.y0)/2
                 ball.pos.midPointX=ball.pos.x0+(ball.pos.xEnd-ball.pos.x0)/2
                 ball.pos.midPointY=ball.pos.y0+(ball.pos.yEnd-ball.pos.y0)/2
 
@@ -74,11 +72,15 @@ def convertData(params,results,model,team):
                 team.ball_list.append(ball)
 
             # if model.names[int(box.cls)] == "racket" :
-            #     count2+=1
-            #     racket=parameters.RACKET(count2)
-            #     racket.x0=int(box.xyxy[0][0])
-            #     racket.y0=int(box.xyxy[0][1])
-            #     racket.xEnd=int(box.xyxy[0][2])
-            #     racket.yEnd=int(box.xyxy[0][3])
+            #     count_r+=1
+            #     racket=[]
+            #     racket=racket_class.RACKET(count_r)
+            #     racket.pos.x0=int(box.xyxy[0][0])
+            #     racket.pos.y0=int(box.xyxy[0][1])
+            #     racket.pos.xEnd=int(box.xyxy[0][2])
+            #     racket.pos.yEnd=int(box.xyxy[0][3])
             #     racket.conf=round(float(box.conf[0]),2)
+            #     racket.pos.midPointX=racket.pos.x0+(racket.pos.xEnd-racket.pos.x0)/2
+            #     racket.pos.midPointY=racket.pos.y0+(racket.pos.yEnd-racket.pos.y0)/2
+            #     racket.side = cnt_side
             #     team.racket_list.append(racket)

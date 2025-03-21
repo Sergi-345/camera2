@@ -12,8 +12,12 @@ import copy
 
 def tracking_management(params,det_team,perm_team,frame):
 
+
     if len(det_team.player_list)==0:
         return
+    
+    
+    ### ADD EMPTY PLAYERS
 
     perm_list_left=[]
     perm_list_right=[]
@@ -49,8 +53,22 @@ def start_tracking(perm_team, det_team, params):
     right_list=0
     if perm_team.init==0:
         if len(det_team.player_list)==4:
-            print("AAA")
+            for det_player in det_team.player_list:
+                if det_player.side==0:
+                    left_list+=1
+                if det_player.side==1:
+                    right_list+=1
 
+            if right_list==2 and left_list==2: # Check 2 players at each side
+                # CREATE PERM PLAYERS
+                for player in det_team.player_list:
+                        perm_team.nPlayers+=1
+                        perm_team.player_list.append(player)
+                        perm_team.init=1
+    
+    if perm_team.init==0:
+        return False
+    
     return True
 
 def ids_management(perm_team,params):

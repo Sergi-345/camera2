@@ -27,21 +27,19 @@ def check_player_in_attack_quadrant(player,params):
     return False
 
 def check_player_in_transition_quadrant(player,params):
-    for side in range(len(params.full_quadr_matrix)):
-        for height in range(len(params.full_quadr_matrix[side])):
-            if player.quadrant==params.full_quadr_matrix[side][height][1]:
-                return True
+    for height in range(len(params.quadr_matrix)):
+        if player.quadrant==params.quadr_matrix[height][1]:
+            return True
     return False
 
 def check_player_in_defense_quadrant(player,params):
-    for side in range(len(params.full_quadr_matrix)):
-        for height in range(len(params.full_quadr_matrix[side])):
-            if player.quadrant==params.full_quadr_matrix[side][height][0]:
-                return True
+    for height in range(len(params.quadr_matrix)):
+        if player.quadrant==params.quadr_matrix[height][0]:
+            return True
     return False
 
 def modify_player_quadrant(player,params):
-    player.quadrant=params.full_quadr_matrix[player.side][0][0]
+    player.quadrant=params.quadr_matrix[0][0]
     if player.quadrant_old%3!=0:
         player.quadrant_old=player.quadrant
 

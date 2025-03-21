@@ -4,7 +4,7 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import (QCoreApplication, QObject, QRunnable, QThread,
                           QThreadPool, pyqtSignal, pyqtSlot, Qt)
 
-def update_frame(results,gui,side):
+def update_frame(results,gui,side, width_resize,height_resize):
     # cv2.cvtColor(self.modFrame, cv2.COLOR_RGB2BGR, self.modFrame)
     cnt=0
     for result in results:
@@ -12,33 +12,23 @@ def update_frame(results,gui,side):
         # Get the original image
         orig_img = result.orig_img  # This is a NumPy array (OpenCV format)
 
-        # Get bounding boxes and class indices
-        boxes = result.boxes.xyxy  # (x1, y1, x2, y2) format
-        class_ids = result.boxes.cls.int().tolist()  # Class indices as integers
-        names = result.names  # Class names dictionary
+        # # Get bounding boxes and class indices
+        # boxes = result.boxes.xyxy  # (x1, y1, x2, y2) format
+        # class_ids = result.boxes.cls.int().tolist()  # Class indices as integers
+        # names = result.names  # Class names dictionary
 
-        # Draw the bounding boxes on the image
-        for i, box in enumerate(boxes):
-            x1, y1, x2, y2 = map(int, box)  # Convert coordinates to integers
-            label = names[class_ids[i]]  # Get class name
-            color = (0, 255, 0)  # Green color for boxes
+        # # Draw the bounding boxes on the image
+        # for i, box in enumerate(boxes):
+        #     x1, y1, x2, y2 = map(int, box)  # Convert coordinates to integers
+        #     label = names[class_ids[i]]  # Get class name
+        #     color = (0, 255, 0)  # Green color for boxes
 
-            # Draw rectangle
-            cv2.rectangle(orig_img, (x1, y1), (x2, y2), color, 2)
-            # Put label text
-            cv2.putText(orig_img, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        #     # Draw rectangle
+        #     cv2.rectangle(orig_img, (x1, y1), (x2, y2), color, 2)
+        #     # Put label text
+        #     cv2.putText(orig_img, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-
-        # height, width, bytesPerComponent = orig_img.shape
-
-        # qimage_width = 600
-        # aspect_ratio = width / height
-        # qimage_height = int(qimage_width * aspect_ratio)
-
-        # resized_frame = cv2.resize(orig_img, (qimage_width, qimage_height))
-
-        height_resize=400
-        width_resize=500
+        
         frame_size = (int(width_resize), int(height_resize))
 
         resized_frame = cv2.resize(result.orig_img, frame_size)
@@ -47,6 +37,7 @@ def update_frame(results,gui,side):
         bytesPerLine = 3 * width_resize
         QImg = QImage(resized_frame.data, width_resize, height_resize, bytesPerLine,QtGui.QImage.Format.Format_RGB888
     )
+        result.orig_img=resized_frame
         pixmap = QPixmap.fromImage(QImg)
         if side=="L":
             gui.initFrame_label.setPixmap(pixmap)

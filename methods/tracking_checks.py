@@ -109,7 +109,6 @@ def make_side_players_lists(perm_list,det_list,params,perm_team,det_team,side,pe
         if det_player.side==side:
             det_list.append(det_player)
 
-            
     perm_list_all=[]
     for perm_player in perm_team.player_list:
         if perm_player.side==side:

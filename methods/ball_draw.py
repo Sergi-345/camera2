@@ -13,7 +13,13 @@ def draw_ball_background(perm_team,frame):
     for ball in perm_team.ball_detected_background_list:
         cv2.rectangle(frame, (ball.pos.x0, ball.pos.y0), (ball.pos.xEnd, ball.pos.yEnd), (0, 255, 0), 2)
 
-
+def draw_ball(cFrame):
+    cnt=-1
+    for result in cFrame.results:
+        cnt+=1
+        for ball in cFrame.ball_list[cnt]:           
+            cv2.rectangle(result.orig_img, (ball.pos.x0, ball.pos.y0), (ball.pos.xEnd, ball.pos.yEnd), (0, 255, 0), 2)
+        
 def draw_ball_quadrant(perm_team,frame,q,params):
 
     if perm_team.kick_init==0:

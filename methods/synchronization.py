@@ -2,10 +2,9 @@ from collections import deque
 import queue as q
 
 class buffer_data:
-    ts_L = deque(maxlen=100)
-    ts_R = deque(maxlen=100)
-    resultsL = deque(maxlen=100)
-    resultsR = deque(maxlen=100)
+
+    resultsL = deque(maxlen=1000)
+    resultsR = deque(maxlen=1000)
 
     def add_data(self,cFrame):
         cnt=-1

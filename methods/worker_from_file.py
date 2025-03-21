@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 from PyQt6.QtGui import *
 from PyQt6.QtCore import (QCoreApplication, QObject, QRunnable, QThread,
                           QThreadPool, pyqtSignal, pyqtSlot, Qt)
-
+from PyQt6.QtCore import QMetaObject, Qt
 
 
 def worker(stop_event,ui,MainWindow,side,q):
@@ -70,6 +70,7 @@ def worker(stop_event,ui,MainWindow,side,q):
         time.sleep(MainWindow.params["time_sleep_processed"])
 
         if cnt_jump%MainWindow.params["jumps"]==0:
+            time.sleep(0.011)
             continue
 
         if MainWindow.params["start_file"]==0:
@@ -84,6 +85,7 @@ def worker(stop_event,ui,MainWindow,side,q):
             # print("time after 5 sec: ",time.time()-init, ", cnt : ", cnt)
             if side == "L":
                 MainWindow.velL= str(diff)
+                QMetaObject.invokeMethod(MainWindow, "update_ui", Qt.ConnectionType.QueuedConnection)
             if side == "R":
                 MainWindow.velR= str(diff)
 

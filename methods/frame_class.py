@@ -8,3 +8,6 @@ class Frame():
         self.tsList=[]
         self.results=[]
         self.player_list=[]
+        self.ball_list=[]
+        self.racket_list=[]
+        
