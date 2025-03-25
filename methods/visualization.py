@@ -9,26 +9,7 @@ def update_frame(results,gui,side, width_resize,height_resize):
     cnt=0
     for result in results:
         cnt+=1
-        # Get the original image
-        orig_img = result.orig_img  # This is a NumPy array (OpenCV format)
-
-        # # Get bounding boxes and class indices
-        # boxes = result.boxes.xyxy  # (x1, y1, x2, y2) format
-        # class_ids = result.boxes.cls.int().tolist()  # Class indices as integers
-        # names = result.names  # Class names dictionary
-
-        # # Draw the bounding boxes on the image
-        # for i, box in enumerate(boxes):
-        #     x1, y1, x2, y2 = map(int, box)  # Convert coordinates to integers
-        #     label = names[class_ids[i]]  # Get class name
-        #     color = (0, 255, 0)  # Green color for boxes
-
-        #     # Draw rectangle
-        #     cv2.rectangle(orig_img, (x1, y1), (x2, y2), color, 2)
-        #     # Put label text
-        #     cv2.putText(orig_img, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-
-        
+        # Get the original image        
         frame_size = (int(width_resize), int(height_resize))
 
         resized_frame = cv2.resize(result.orig_img, frame_size)
@@ -38,6 +19,31 @@ def update_frame(results,gui,side, width_resize,height_resize):
         QImg = QImage(resized_frame.data, width_resize, height_resize, bytesPerLine,QtGui.QImage.Format.Format_RGB888
     )
         result.orig_img=resized_frame
+        pixmap = QPixmap.fromImage(QImg)
+        if side==0:
+            gui.initFrame_label.setPixmap(pixmap)
+        elif side==1:
+            gui.initFrame2_label.setPixmap(pixmap)
+
+def update_frame_raw(frameList,gui,side):
+
+    cnt=0
+    for frame  in frameList:
+        if cnt%10!=0:
+            continue
+        cnt+=1
+        # Get the original image 
+        width_resize = 400
+        height_resize = 300  
+        frame_size = (int(width_resize), int(height_resize))
+
+        resized_frame = cv2.resize(frame, frame_size)
+
+        cv2.cvtColor(resized_frame, cv2.COLOR_BGR2RGB, resized_frame)   
+        bytesPerLine = 3 * width_resize
+        QImg = QImage(resized_frame.data, width_resize, height_resize, bytesPerLine,QtGui.QImage.Format.Format_RGB888
+    )
+        frame=resized_frame
         pixmap = QPixmap.fromImage(QImg)
         if side==0:
             gui.initFrame_label.setPixmap(pixmap)

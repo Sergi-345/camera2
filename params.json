@@ -1,10 +1,10 @@
 {
-    "plot": 1,
+    "plot": 0,
     "record": 1,
     "fps": 120,
     "contrast": 0,
     "repeat": 0,
-    "brightness": 100,
+    "brightness": -50,
     "visualise_raw": 1,
     "visualise_processed": 0,
     "from_file": 0,
@@ -14,6 +14,7 @@
     "saturation": 70,
     "gamma": 80,
     "white_balance_temperature": 5000,
+    "batch_size": 4,
     "templateL": "/home/aitech/GIT/videos/match/7/output_L_frame_100.jpg",
     "templateR": "/home/aitech/GIT/videos/match/7/output_R_frame_100.jpg",
     "image_size": [
@@ -58,6 +59,6 @@
     "cut_index": 1,
     "cut_width": 1088,
     "cut_height": 672,
-    "jumps": 4,
+    "jumps": 5,
     "time_sleep_processed": 0.018
 }

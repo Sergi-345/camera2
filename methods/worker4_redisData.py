@@ -72,7 +72,7 @@ def worker(stop_event,perm_team,redis_client):
             json_global = {**json_global, **json1}
             cnt+=1
 
-        # print("json_global : ", json_global)
+        # print("json_global : ")
         # Convert the dictionary to a JSON string
         json_global_str = json.dumps(json_global)
 

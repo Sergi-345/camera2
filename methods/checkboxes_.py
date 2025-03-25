@@ -180,6 +180,9 @@ def jumps_changed(MainWindow, ui):
 def time_sleep_changed(MainWindow, ui):
     MainWindow.params["time_sleep_processed"]= float(ui.time_sleep_textEdit.toPlainText())
 
+def batch_size_changed(MainWindow, ui):
+    MainWindow.params["batch_size"]= float(ui.batch_size_textEdit.toPlainText())
+
 
     
 

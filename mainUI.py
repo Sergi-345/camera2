@@ -199,6 +199,10 @@ if __name__ == "__main__":
 
     ui.time_sleep_textEdit.setText(str(MainWindow.params["time_sleep_processed"]))
     ui.time_sleep_textEdit.textChanged.connect(lambda: checkboxes_.time_sleep_changed(MainWindow, ui))
+
+    ui.batch_size_textEdit.setText(str(MainWindow.params["batch_size"]))
+    ui.batch_size_textEdit.textChanged.connect(lambda: checkboxes_.batch_size_changed(MainWindow, ui))
+
     
     MainWindow.show()
     

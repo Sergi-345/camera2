@@ -5,12 +5,24 @@ from methods import racket_draw
 from methods import serve_draw
 import cv2
 import time
+import os
 
 
 def save_video(stop_event,ui,MainWindow,side,q):
 
     # 🎥 Configurar el guardado del video
-    output_file = "/home/aitech/GIT/videos/match/output_"+side+".avi"
+
+    exp_name = ui.exp_name_textEdit.toPlainText()
+
+    path = "/home/aitech/GIT/videos/match/"+exp_name
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+    
+    # path = '/media/aitech/UBUNTU 22_0/aitech_videos2'
+
+    output_file = path+"/output0_"+side+".avi"
+    print("output_file : ", output_file)
     fourcc = cv2.VideoWriter_fourcc(*"XVID")  # Codec eficiente (prueba también "MJPG")
     ## XVID 9.4s cada 5s
     ## MJPG 17.61s cada 5s
@@ -27,26 +39,46 @@ def save_video(stop_event,ui,MainWindow,side,q):
     cnt=0
 
     if side=="L":
+        sideCh="L"
         side=0
     else:
         side=1
+        sideCh="R"
     
+    cnt_batch=0
+    cnt_video=0
+
     while not stop_event.is_set(): 
         
-        frameList = q.get()
-        cnt_frames=0
-        for frame in frameList:
-            cnt+=1
-            out.write(frame)
-            cnt_frames+=1
+        cnt+=1
 
-        if cnt%100==0:
-            # print("cnt : ", cnt)
-            # print("qsave.qsize(): ",q.qsize())
+        cnt_batch+= MainWindow.params["batch_size"]
+
+        frameList = q.get()
+
+        if MainWindow.params["record"]==1:
+            for frame in frameList:
+                out.write(frame)
+
+        if MainWindow.params["visualise_raw"]==1:
+                visualization.update_frame_raw(frameList,ui,side)
+
+        if cnt%20==0:
             if side==0:
                 MainWindow.qsaveL_size = str(q.qsize())
             if side==1:
                 MainWindow.qsaveR_size = str(q.qsize())
+
+        ## Create new video
+
+        if cnt_batch==18000: ## 36000 ->10 min
+            cnt_batch=0
+            cnt_video+=1 
+            print("Changing to video ", cnt_video)
+            out.release()
+
+            output_file = path+"/output"+str(cnt_video)+"_"+sideCh+".avi"
+            out = cv2.VideoWriter(output_file, fourcc, framerate, frame_size)
 
 
 def save_video_processed(stop_event,ui,MainWindow,params,side,q):
