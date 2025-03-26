@@ -53,7 +53,7 @@ def worker(stop_event,ui,MainWindow,side,q_save,q_detect):
     ### VARIABLES
     cnt=0
 
-    batch_size=4
+    batch_size=MainWindow.params["batch_size"]
     frameList=[]
     cntf=-1
     cnt_jump=0
@@ -106,24 +106,7 @@ def worker(stop_event,ui,MainWindow,side,q_save,q_detect):
         ### Modify frame size
         frame = tools.cut_frame(frame,MainWindow,actual_height,actual_width)
 
-
-        if MainWindow.params["plot"]==1:
             
-            #### ADD FRAME TO BATCH
-            cntf+=1
-            if cntf==0:
-                cFrame.frameList=[]
-                cFrame.timeStampList=[]
-
-            cFrame.frameList.append(frame)
-            cFrame.timeStampList.append(time.time())
-
-            ### SEND BATCH AND RESET CNT
-            if len(cFrame.frameList)==batch_size:
-                q_detect.put(cFrame)
-                cntf=-1
-
-        
         #### ADD FRAME TO BATCH
         cntf+=1
         if cntf==0:
@@ -133,11 +116,11 @@ def worker(stop_event,ui,MainWindow,side,q_save,q_detect):
 
         ### SEND BATCH AND RESET CNT
         if len(frameList)==batch_size:
-            q_save.put(frameList)
-            
+            if MainWindow.params["plot"]==1:
+                q_detect.put(frameList)
+            if len(frameList)==batch_size:
+                q_save.put(frameList)   
             cntf=-1
-
-
 
         if 0xFF == ord('q'):
             break

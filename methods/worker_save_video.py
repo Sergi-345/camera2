@@ -107,28 +107,28 @@ def save_video_processed(stop_event,ui,MainWindow,params,side,q):
     
     while not stop_event.is_set(): 
         
-        cFrame= q.get()
+        cFrame_list= q.get()
 
-        cnt_batch+= len(cFrame.results)
+        cnt_batch+= len(cFrame_list)
 
         if MainWindow.params["visualise_processed"]==1:
 
-            player_draw.draw_players_quadrant(cFrame,params)
-            player_draw.draw_player(cFrame)
-            ball_draw.draw_ball(cFrame)
+            player_draw.draw_players_quadrant(cFrame_list,params)
+            player_draw.draw_player(cFrame_list)
+            ball_draw.draw_ball(cFrame_list)
             # racket_draw.draw_racket(cFrame)
 
             # serve_draw.draw_kick_start(cFrame)
-            serve_draw.draw_reception_quadrant_and_player(cFrame,params,side)
+            serve_draw.draw_reception_quadrant_and_player(cFrame_list,params,side)
 
-            ball_draw.draw_ball_bounce_in_kick_start(cFrame)
+            ball_draw.draw_ball_bounce_in_kick_start(cFrame_list)
             # ball_draw.draw_ball_bounce(perm_team,det_team.frame)
 
-            visualization.update_frame(cFrame.results,ui,side, width_resize,height_resize)
+            visualization.update_frame(cFrame_list,ui,side, width_resize,height_resize)
 
         if MainWindow.params["record"]==1:
-            for result in cFrame.results:
-                out.write(result.orig_img)
+            for cframe in cFrame_list:
+                out.write(cframe.frame)
 
             ## Create new video
             if cnt_batch>MainWindow.params["video_size"]: ## 18000 ->5 min

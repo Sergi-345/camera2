@@ -1,6 +1,15 @@
 from collections import deque
 from methods import player_class
 
+
+
+class DET_TEAM():
+    def __init__(self,id):
+        self.player_list=[]
+        self.racket_list=[]
+        self.ball_list=[]
+
+
 class TEAM():
     def __init__(self,id):
         

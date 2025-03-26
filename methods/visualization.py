@@ -4,21 +4,21 @@ from PyQt6.QtGui import *
 from PyQt6.QtCore import (QCoreApplication, QObject, QRunnable, QThread,
                           QThreadPool, pyqtSignal, pyqtSlot, Qt)
 
-def update_frame(results,gui,side, width_resize,height_resize):
+def update_frame(cFrame_list,gui,side, width_resize,height_resize):
     # cv2.cvtColor(self.modFrame, cv2.COLOR_RGB2BGR, self.modFrame)
     cnt=0
-    for result in results:
+    for cFrame in cFrame_list:
         cnt+=1
         # Get the original image        
         frame_size = (int(width_resize), int(height_resize))
 
-        resized_frame = cv2.resize(result.orig_img, frame_size)
+        resized_frame = cv2.resize(cFrame.frame, frame_size)
 
         cv2.cvtColor(resized_frame, cv2.COLOR_BGR2RGB, resized_frame)   
         bytesPerLine = 3 * width_resize
         QImg = QImage(resized_frame.data, width_resize, height_resize, bytesPerLine,QtGui.QImage.Format.Format_RGB888
     )
-        result.orig_img=resized_frame
+        cFrame.frame=resized_frame
         pixmap = QPixmap.fromImage(QImg)
         if side==0:
             gui.initFrame_label.setPixmap(pixmap)

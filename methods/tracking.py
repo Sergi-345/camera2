@@ -10,15 +10,14 @@ import copy
 
 
 
-def tracking_management(params,det_team,perm_team,frame):
+def tracking_management(params,det_player_list,perm_team):
 
 
-    if len(det_team.player_list)==0:
+    if len(det_player_list)==0:
         return
     
     
     ### ADD EMPTY PLAYERS
-
     perm_list_left=[]
     perm_list_right=[]
     det_list_left=[]
@@ -28,8 +27,8 @@ def tracking_management(params,det_team,perm_team,frame):
     perm_list_missing_right=[]
 
     # side : 0 = LEFT //// side : 1 = RIGHT
-    tracking_checks.make_side_players_lists(perm_list_left,det_list_left,params,perm_team,det_team,0,perm_list_missing_left)
-    tracking_checks.make_side_players_lists(perm_list_right,det_list_right,params,perm_team,det_team,1,perm_list_missing_right)
+    tracking_checks.make_side_players_lists(perm_list_left,det_list_left,params,perm_team,det_player_list,0,perm_list_missing_left)
+    tracking_checks.make_side_players_lists(perm_list_right,det_list_right,params,perm_team,det_player_list,1,perm_list_missing_right)
 
     # 1 PLAYER OR MORE IN LEFT SIDE
     if len(det_list_left)>=1 and len(perm_list_left)>=1:
@@ -46,14 +45,14 @@ def tracking_management(params,det_team,perm_team,frame):
 
 
 
-def start_tracking(perm_team, det_team, params):
+def start_tracking(perm_team, det_player_list, params):
 
     # Initial detection
     left_list=0
     right_list=0
     if perm_team.init==0:
-        if len(det_team.player_list)==4:
-            for det_player in det_team.player_list:
+        if len(det_player_list)==4:
+            for det_player in det_player_list:
                 if det_player.side==0:
                     left_list+=1
                 if det_player.side==1:
@@ -61,7 +60,7 @@ def start_tracking(perm_team, det_team, params):
 
             if right_list==2 and left_list==2: # Check 2 players at each side
                 # CREATE PERM PLAYERS
-                for player in det_team.player_list:
+                for player in det_player_list:
                         perm_team.nPlayers+=1
                         perm_team.player_list.append(player)
                         perm_team.init=1

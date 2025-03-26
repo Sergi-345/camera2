@@ -104,8 +104,8 @@ def check_one_player_missing_and_change_quadrant(perm_list, det_list,params,perm
                 if side==1:
                     perm_player_missing.RealMidPointX=8.2+random.uniform(-0.3, 0.3)
 
-def make_side_players_lists(perm_list,det_list,params,perm_team,det_team,side,perm_list_missing):
-    for det_player in det_team.player_list:
+def make_side_players_lists(perm_list,det_list,params,perm_team,det_player_list,side,perm_list_missing):
+    for det_player in det_player_list:
         if det_player.side==side:
             det_list.append(det_player)
 

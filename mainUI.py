@@ -57,6 +57,7 @@ def start():
     q3_stad=q.Queue() # Stadistics
     q_saveL = q.Queue()
     q_saveR = q.Queue()
+
     
     if MainWindow.params["from_file"]== 0:
         MainWindow.params["start"]=1
@@ -65,22 +66,22 @@ def start():
         threading.Thread(target=worker_save_video.save_video,  args=(stop_event,ui,MainWindow,"L",q_saveL), daemon=True).start()
         threading.Thread(target=worker_save_video.save_video,  args=(stop_event,ui,MainWindow,"R",q_saveR), daemon=True).start()
         time.sleep(1)
-        ## THREADS TO DETECTIONS
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1,"L"), daemon=True).start()
-        time.sleep(2)
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2,"R"), daemon=True).start()
-        time.sleep(5)
         ## THREADS TO VIDEO SOURCE
         params.load_data(folder,MainWindow)
-        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"L",q_saveL,q1_detectL), daemon=True).start()
-        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"R",q_saveR,q1_detectR), daemon=True).start()
-        time.sleep(3)
-        ## THREAD TO STATISTICS
+        ## THREADS TO DETECTIONS
         params.load_data(folder,MainWindow)
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1,"L",params), daemon=True).start()
+        time.sleep(2)
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2,"R",params), daemon=True).start()
+        time.sleep(5)
+        ## THREAD TO STATISTICS
         threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3_stad,perm_team,q_saveL,q_saveR,params, model1), daemon=True).start()
         ## THREAD TO REDIS
         time.sleep(3)
         threading.Thread(target=worker4_redisData.worker,  args=(stop_event,perm_team,redis_client), daemon=True).start()
+        time.sleep(3)
+        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"L",q_saveL,q1_detectL), daemon=True).start()
+        threading.Thread(target=worker_from_camera.worker,  args=(stop_event,ui,MainWindow,"R",q_saveR,q1_detectR), daemon=True).start()
 
     else:
         
@@ -91,19 +92,19 @@ def start():
         threading.Thread(target=worker_save_video.save_video_processed,  args=(stop_event,ui,MainWindow,params,"R",q_saveR), daemon=True).start()
         time.sleep(1)
         ## THREADS TO DETECTIONS
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1,"L"), daemon=True).start()
-        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2,"R"), daemon=True).start()
-        time.sleep(5)
-        ## THREADS TO VIDEO SOURCE
-        threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"L",q1_detectL), daemon=True).start()
-        threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"R",q1_detectR), daemon=True).start()
-        time.sleep(3)
-        ## THREAD TO STATISTICS
         params.load_data(folder,MainWindow)
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectL,q3_stad,model1,"L",params), daemon=True).start()
+        threading.Thread(target=worker2_detections.worker,  args=(stop_event,ui,MainWindow,q1_detectR,q3_stad,model2,"R",params), daemon=True).start()
+        time.sleep(5)
+        ## THREAD TO STATISTICS
         threading.Thread(target=worker3_stadistics.worker,  args=(stop_event,ui,MainWindow,q3_stad,perm_team,q_saveL,q_saveR,params, model1), daemon=True).start()
         ## THREAD TO REDIS
         time.sleep(3)
         threading.Thread(target=worker4_redisData.worker,  args=(stop_event,perm_team,redis_client), daemon=True).start()
+        ## THREADS TO VIDEO SOURCE
+        threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"L",q1_detectL), daemon=True).start()
+        threading.Thread(target=worker_from_file.worker,  args=(stop_event,ui,MainWindow,"R",q1_detectR), daemon=True).start()
+        time.sleep(3)
 
 def stop():
     MainWindow.params["start"]=0

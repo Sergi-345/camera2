@@ -50,6 +50,7 @@ def worker(stop_event,ui,MainWindow,side,q):
     cFrame.side=side
     cnt_jump=0
     videoNumber=0
+
     while not stop_event.is_set(): 
 
         ret, frame = cap.read()
@@ -102,15 +103,14 @@ def worker(stop_event,ui,MainWindow,side,q):
             #### ADD FRAME TO BATCH
             cntf+=1
             if cntf==0:
-                cFrame.frameList=[]
-                cFrame.timeStampList=[]
+                frameList=[]
 
-            cFrame.frameList.append(frame)
-            cFrame.timeStampList.append(time.time())
 
+            frameList.append(frame)
+            
             ### SEND BATCH AND RESET CNT
-            if len(cFrame.frameList)==batch_size:
-                q.put(cFrame)
+            if len(frameList)==batch_size:
+                q.put(frameList)
                 cntf=-1
 
         if 0xFF == ord('q'):

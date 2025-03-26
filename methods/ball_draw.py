@@ -1,23 +1,23 @@
 import cv2
 import numpy as np
 
-def draw_ball_bounce_in_kick_start(cFrame):
+def draw_ball_bounce_in_kick_start(cFrame_list):
     cnt=-1
-    for result in cFrame.results:
+    for cFrame in cFrame_list:
         cnt+=1
-        for ball in cFrame.ballBounceAfterKick_list[cnt]:
-            cv2.rectangle(result.orig_img, (ball.pos.x0, ball.pos.y0), (ball.pos.xEnd, ball.pos.yEnd), (0, 255, 255), 2)
+        for ball in cFrame.ballBounceAfterKick_list:
+            cv2.rectangle(cFrame.frame, (ball.pos.x0, ball.pos.y0), (ball.pos.xEnd, ball.pos.yEnd), (0, 255, 255), 2)
 
 def draw_ball_bounce(perm_team,frame):
     for ball in perm_team.ball_bounce_list:
         cv2.rectangle(frame, (ball.pos.x0, ball.pos.y0), (ball.pos.xEnd, ball.pos.yEnd), (0, 255, 255), 2)
 
-def draw_ball(cFrame):
+def draw_ball(cFrame_list):
     cnt=-1
-    for result in cFrame.results:
+    for cFrame in cFrame_list:
         cnt+=1
-        for ball in cFrame.ball_list[cnt]:           
-            cv2.rectangle(result.orig_img, (ball.pos.x0, ball.pos.y0), (ball.pos.xEnd, ball.pos.yEnd), (0, 255, 0), 2)
+        for ball in cFrame.ball_list:           
+            cv2.rectangle(cFrame.frame, (ball.pos.x0, ball.pos.y0), (ball.pos.xEnd, ball.pos.yEnd), (0, 255, 0), 2)
         
 def draw_ball_quadrant(perm_team,frame,q,params):
 

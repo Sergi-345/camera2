@@ -1,20 +1,20 @@
 import cv2
 import numpy as np
 
-def draw_reception_quadrant_and_player(cFrame,params,side):
+def draw_reception_quadrant_and_player(cFrame_list,params,side):
 
     cnt=-1
-    for result in cFrame.results:
+    for cFrame in cFrame_list:
         cnt+=1
 
-        if cFrame.kick_side_list[cnt]==side: # WE NEED TO BE IN THE RESEPTION QUADRANT
+        if cFrame.kick_side==side: # WE NEED TO BE IN THE RESEPTION QUADRANT
             return
         
-        kick_init=cFrame.kick_init_list[cnt]
-        reception_player_index=cFrame.reception_player_index_list[cnt]
-        reception_quadrant_ball=cFrame.reception_quadrant_ball_list[cnt]
-        player_list = cFrame.player_list[cnt]
-        player_id = cFrame.reception_player_id_list[cnt]
+        kick_init=cFrame.kick_init
+        reception_player_index=cFrame.reception_player_index
+        reception_quadrant_ball=cFrame.reception_quadrant_ball
+        player_list = cFrame.player_list
+        player_id = cFrame.reception_player_id
 
         if kick_init==0:
             return
@@ -25,14 +25,14 @@ def draw_reception_quadrant_and_player(cFrame,params,side):
         pts = np.array([points[:]],np.int32)
         pts = pts.reshape((-1, 1, 2))
         
-        result.orig_img = cv2.polylines(result.orig_img, [pts], True, (255, 255, 0), 2)
+        cFrame.frame = cv2.polylines(cFrame.frame, [pts], True, (255, 255, 0), 2)
         
         player=[]
         for player_obj in player_list:
             if player_obj.id==player_id:
                 player=player_obj
         if player!=[]:
-            cv2.rectangle(result.orig_img, (player.pos.x0, player.pos.y0), (player.pos.xEnd, player.pos.yEnd), (255, 0, 255), 2)
+            cv2.rectangle(cFrame.frame, (player.pos.x0, player.pos.y0), (player.pos.xEnd, player.pos.yEnd), (255, 0, 255), 2)
 
 def draw_kick_start(cFrame):
 
