@@ -15,29 +15,6 @@ from PyQt6.QtCore import QMetaObject, Qt
 
 
 
-# def update_frame(frame,gui,side):
-#     # cv2.cvtColor(self.modFrame, cv2.COLOR_RGB2BGR, self.modFrame)
-#     height, width, bytesPerComponent = frame.shape
-
-#     qimage_height = 600
-#     aspect_ratio = width / height
-#     qimage_width = int(qimage_height * aspect_ratio)
-
-#     resized_frame = cv2.resize(frame, (qimage_width, qimage_height))
-
-#     cv2.cvtColor(resized_frame, cv2.COLOR_BGR2RGB, resized_frame)   
-#     bytesPerLine = 3 * qimage_width
-#     QImg = QImage(resized_frame.data, qimage_width, qimage_height, bytesPerLine,QtGui.QImage.Format.Format_RGB888
-# )
-#     pixmap = QPixmap.fromImage(QImg)
-#     if side=="L":
-#         gui.initFrame2_label.setPixmap(pixmap)
-#         # cv2.imshow("left",frame)
-#     else:
-#         gui.initFrame_label.setPixmap(pixmap)
-#         # cv2.imshow("right",frame)
-
-
 def worker(stop_event,ui,MainWindow,side,q_save,q_detect):
 
     # Usa MJPEG si es compatible #### WORKING!!

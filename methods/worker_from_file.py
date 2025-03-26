@@ -20,7 +20,7 @@ def worker(stop_event,ui,MainWindow,side,q):
     # local_model = YOLO(f'{HOME}/models/best.pt') 
     # local_model = YOLO(f'{HOME}/models/best.engine') 
 
-    videoSource = MainWindow.params["folder_name"]+"/output_"+side+".avi"
+    videoSource = MainWindow.params["folder_name"]+"/output0_"+side+".avi"
 
     cap = cv2.VideoCapture(videoSource)
     framerate=60
@@ -38,7 +38,6 @@ def worker(stop_event,ui,MainWindow,side,q):
     print(f"FPS: {actual_fps}")
     print(f"Formato: {actual_format}")
 
-
     ### VARIABLES
     init=time.time()
     cnt=0
@@ -50,12 +49,19 @@ def worker(stop_event,ui,MainWindow,side,q):
     cFrame.width=actual_width
     cFrame.side=side
     cnt_jump=0
+    videoNumber=0
     while not stop_event.is_set(): 
 
         ret, frame = cap.read()
         if not ret:
-            print("No se pudo capturar el cuadro")
-            break
+            videoNumber+=1
+            print("openning source video number ", videoNumber)
+            videoSource = MainWindow.params["folder_name"]+"/output"+str(videoNumber)+"_"+side+".avi"
+            cap = cv2.VideoCapture(videoSource)
+            ret, frame = cap.read()
+            if not ret:
+                print("Video "+side+" finished")
+                break
 
         if side=="L":
             MainWindow.start_vect[0]=1

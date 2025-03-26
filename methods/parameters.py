@@ -19,7 +19,7 @@ class PARAMS():
         self.p_map=[]
         self.p_map.append(self.pL_real)
         self.p_map.append(self.pR_real)
-        print("self.p_map : ", self.p_map)
+        # print("self.p_map : ", self.p_map)
 
     data=[]
     calibration=0

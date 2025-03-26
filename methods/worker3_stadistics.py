@@ -14,8 +14,6 @@ def worker(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR,params,model):
 
     buffer = syn.buffer_data()
 
-
-    batch_size=4
     while True:
         if stop_event.is_set():
             break
@@ -32,7 +30,6 @@ def worker(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR,params,model):
         ### Syncronization
         buffer.add_data(cFrame)
 
-
         new_cFrame_L=frame_class.Frame()
         new_cFrame_R=frame_class.Frame()
         
@@ -41,13 +38,13 @@ def worker(stop_event,ui,MainWindow,q3,perm_team,q_saveL,q_saveR,params,model):
             cnt+=1
             
             if MainWindow.params["visualise_processed"]==1:
+
                 new_cFrame_L.results.append(results_ts[0])
                 new_cFrame_R.results.append(results_ts[1])
-
+                
                 detections2cFrame(perm_team,new_cFrame_R,new_cFrame_L)
 
         # Convert to list if needed
-
         if MainWindow.params["visualise_processed"]==1:
             convert2list(new_cFrame_L)
             convert2list(new_cFrame_R)

@@ -19,8 +19,6 @@ def save_video(stop_event,ui,MainWindow,side,q):
     if not os.path.exists(path):
         os.makedirs(path)
     
-    # path = '/media/aitech/UBUNTU 22_0/aitech_videos2'
-
     output_file = path+"/output0_"+side+".avi"
     print("output_file : ", output_file)
     fourcc = cv2.VideoWriter_fourcc(*"XVID")  # Codec eficiente (prueba también "MJPG")
@@ -70,8 +68,7 @@ def save_video(stop_event,ui,MainWindow,side,q):
                 MainWindow.qsaveR_size = str(q.qsize())
 
         ## Create new video
-
-        if cnt_batch==18000: ## 36000 ->10 min
+        if cnt_batch==MainWindow.params["video_size"]: ## 18000 ->5 min
             cnt_batch=0
             cnt_video+=1 
             print("Changing to video ", cnt_video)
@@ -84,7 +81,8 @@ def save_video(stop_event,ui,MainWindow,side,q):
 def save_video_processed(stop_event,ui,MainWindow,params,side,q):
 
     # 🎥 Configurar el guardado del video
-    output_file = MainWindow.params["folder_name"]+"/output_"+side+"_processed.avi"
+    path=MainWindow.params["folder_name"]
+    output_file = path+"/output0_"+side+"_processed.avi"
     fourcc = cv2.VideoWriter_fourcc(*"XVID")  # Codec eficiente (prueba también "MJPG")
     
     actual_height = int(MainWindow.params["cut_height"])
@@ -97,14 +95,21 @@ def save_video_processed(stop_event,ui,MainWindow,params,side,q):
     out = cv2.VideoWriter(output_file, fourcc, framerate, frame_size)
 
     cnt=0
+    sideCh=side
+
     if side=="L":
         side=0
     else:
         side=1
+
+    cnt_video=0
+    cnt_batch=0
     
     while not stop_event.is_set(): 
         
         cFrame= q.get()
+
+        cnt_batch+= len(cFrame.results)
 
         if MainWindow.params["visualise_processed"]==1:
 
@@ -124,6 +129,16 @@ def save_video_processed(stop_event,ui,MainWindow,params,side,q):
         if MainWindow.params["record"]==1:
             for result in cFrame.results:
                 out.write(result.orig_img)
+
+            ## Create new video
+            if cnt_batch>MainWindow.params["video_size"]: ## 18000 ->5 min
+                cnt_batch=0
+                cnt_video+=1 
+                print("Changing to video ", cnt_video)
+                out.release()
+
+                output_file = path+"/output"+str(cnt_video)+"_"+sideCh+"_processed.avi"
+                out = cv2.VideoWriter(output_file, fourcc, framerate, frame_size)
 
         cnt+=1
         if cnt%20==0:

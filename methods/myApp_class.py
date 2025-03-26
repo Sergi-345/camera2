@@ -26,8 +26,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.velR=0
         self.velL=0
         self.qdetL_size=0
-        self.qdetR_size=0
-        
+        self.qdetR_size=0  
 
     def closeEvent(self, event):
         """Save parameters to JSON when closing the UI."""
